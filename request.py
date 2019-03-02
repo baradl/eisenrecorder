@@ -1,4 +1,3 @@
-import pymongo as pm
 import helper as he
 import printer
 import checker
@@ -20,11 +19,9 @@ def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     if type(day) == int: day = str(day)
     doc = {"day": day, "type": workout_type}
     
-    if workout_type == "off": return doc
+    if workout_type == "run": doc.update({"run": exercises})
     
-    elif workout_type == "run": doc.update({"run": exercises})
-    
-    else: 
+    elif workout_type != "off": 
         doc.update({ "amount of exercises": len(exercises)})
         for i in range(len(exercises)):
             doc.update({"exercise"+str(i+1): exercises[i]})
@@ -63,7 +60,7 @@ def delete_session(col, day, pre_answer = False, amount = 1):
             security_question = input("Are you sure to delete everything?\n")
             if security_question == "yes":
                 for document in cursor:
-                    printer.print_session(document)
+                    #printer.print_session(document)
                     col.delete_one(document)
     else:
         counter = 0

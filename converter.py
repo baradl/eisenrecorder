@@ -65,11 +65,20 @@ def convert_input(exercise):
         exercise[1] = int(exercise[1])
         exercise[2] = int(exercise[2])
         try: exercise[3] = int(exercise[3])
-        except: exercise[3] = float(exercise[3]) 
+        except: 
+            try: exercise[3] = float(exercise[3])
+            except: exercise[3] = str(exercise[3])
     else:
         exercise[1] = he.string_to_list(string = exercise[1])
         exercise[2] = he.string_to_list(string = exercise[2])
-        assert len(exercise[1]) == len(exercise[2])
+        n1 = len(exercise[1])
+        n2 = len(exercise[2])
+        if n1 < n2:
+            assert n1 == 1
+            exercise[1] = exercise[1] * n2
+        elif n1 > n2:
+            assert n2 == 1
+            exercise[2] = exercise[2] * n1
     return exercise
 
 

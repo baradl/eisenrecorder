@@ -53,29 +53,54 @@ def insert_cache():
             print(he.indent())
             decision = input("Correct? ")
             if decision == "yes": 
-                year = "2019"
-                directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
-                day = dic["day"]
-                if find_session(day, month, year) is not None:
-                    filepath = directory + day + month + year + "(1)"
-                filepath = filepath + ".txt"
-                pickle.dump(data,open(filepath, "wb"))
+                save_cache_entry(data)
             else: continue
             
             decision = input("Session cached. Insert another one? ")
             if decision != "yes": break
 
+
+
+
 ###############################################################################
-            
-        
-def upload_cache(db):
+
+
+
+
+def save_cache_entry(data):
+    month = data[0]
+    dic = data[1]
+    year = "2019"
+    filepath = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    day = dic["day"]
+    filepath += day + month + year 
+    if find_session(day, month, year) is not None:
+        filepath += "(1)"
+    filepath += ".txt"
+    pickle.dump(data,open(filepath, "wb"))        
+
+
+
+
+
+###############################################################################
+    
+    
+    
+
+       
+def upload_cache():
+    import connect as con
+    client = con.connect_to_client()
+    db = client["TrainingLogData"]
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
     os.chdir(directory)
     
     for file_ in glob.glob("*.txt"):
         filepath = directory + file_
         item = pickle.load(open(filepath,"rb"))
-        col_name = conv.convert_to_month(item[0])
+        name = file_.replace(".txt","")
+        col_name = conv.convert_to_month(item[0]) + name[-4:]
         doc      = item[1]
         day = doc["day"]
         if checker.check_doc_exist(db, db[col_name], day):
@@ -84,8 +109,13 @@ def upload_cache(db):
             if dec == "yes": re.insert_session(db[col_name], doc)
             else: continue
         else: re.insert_session(db[col_name], doc)
-    
-    delete_cache("all")
+    client.close()
+    #delete_cache("all")
+
+
+
+###############################################################################
+
         
 
 def see_cache():
@@ -104,6 +134,12 @@ def see_cache():
 
 
 
+
+###############################################################################
+        
+        
+        
+
 def delete_cache(day, month = "", year = "2019"):
     
     
@@ -119,8 +155,10 @@ def delete_cache(day, month = "", year = "2019"):
         month = conv.convert_month_to_int(month)
         file = find_session(day, month, year)
         os.remove(directory + file)
-
-            
+        
+###############################################################################
+        
+        
 """
 returns pickled file if day exists in cache and None if such a day does not 
 exist
@@ -147,6 +185,11 @@ def find_session(day, month, year = "2019"):
     
 
 
+###############################################################################
+    
+    
+    
+    
 def is_empty():
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
     os.chdir(directory)

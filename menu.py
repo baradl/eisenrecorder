@@ -9,12 +9,9 @@ def user_start():
     if con.check_internet() and not cache.is_empty():
         decision = input("Cache can be uploaded. Confirm? ")
         if decision == "yes":
-            client = con.connect_to_client()
-            db = client["TrainingLogData"]
-            cache.upload_cache(db)
-            client.close()
+            cache.upload_cache()
     print(he.indent())
-    print("1. Edit Database \n2. Edit Cache")
+    print("1. Edit Database \n2. Edit Cache \n3. Backup")
     dec1 = input("\nChoose number or press enter for exit: ")
     
     if dec1 == "1":
@@ -26,8 +23,12 @@ def user_start():
             print("No network service. Going back to main menu")
             user_start()
     
-    if dec1 == "2": 
-        cache.menu_cache()
+    elif dec1 == "2": 
+        menu_cache()
+    elif dec1 == "3":
+        backup_menu()
+    
+        
     else:
         print("Exit.")
 
@@ -96,7 +97,7 @@ def user_menu(db):
     
     elif input_ == "3":
         date = input("Date of session (dd.mm.yy): ")
-        [day, month, year] = he.convert_date(date)
+        [day, month, year] = conv.convert_date(date)
         col_name = conv.convert_to_month(month) + "20" + str(year)
         col = db[col_name]
         if len(str(day)) == 1: day = "0" + str(day)
@@ -229,7 +230,7 @@ def user_menu_edit(session, col):
 def menu_cache():
     import cache
     print("1. Insert into cache. \n2. Upload cache \n3. See all cache sessions \n4. Delete cached sessions")
-    dec = input("\n Choose number or press enter for exit: ")
+    dec = input("\nChoose number or press enter for exit: ")
     
     if dec == "1":
         cache.insert_cache()           
@@ -243,16 +244,37 @@ def menu_cache():
         cache.see_cache()
     elif dec == "4":
         date = input("Type 'all' or specific date: ")
-        if date == "all": cache.delete_cache(date)
-        else:
-            conv.convert_date(date)
+        
+        try:
+            date = conv.convert_date(date)
             cache.delete_cache(date)
+        except: 
+            cache.delete_cache(date)           
+            
         
     else:
         print("Closing.")
         
-        
-        
+
+###############################################################################        
+
+
+def backup_menu():
+    import backup
+    print("1. Create backup \n2. See backup")
+    decision = input("Choose number or press enter for exit: ")
+    
+    if decision == "1":
+        host = con.connect_to_client()
+        db = host["TrainingLogData"]
+        col = db["AllSessions"]
+        backup.create_backup(col)
+        print("Backed it up.")
+    elif decision == "2":
+        backup.check_backup()
+    else:
+        print("Closing.")    
+                
         
 # =============================================================================
 # ###############################################################################        

@@ -1,10 +1,10 @@
 import user_interaction as ui
 import helper as he
-import print_fancy
-
+import print_fancy, delete_pycache
 
 print_fancy
 
+delete_pycache
 #run_test
 
 

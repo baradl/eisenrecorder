@@ -4,9 +4,6 @@ from helper import converter as conv
 from helper import check
 import menu
 import cache
-#import pymongo as pm
-#import terminal_interaction as ti
-
 
 
 
@@ -80,7 +77,6 @@ def user_insert(db, col = True):
 
 
 def insert_in_all(db):
-    print(db)
     col_all = db["AllSessions"]
     
     
@@ -89,11 +85,12 @@ def insert_in_all(db):
         list_col.remove("AllSessions")
     for col_name in list_col:
         col = db[col_name]
-        for document in col.find():
-            alldays = he.get_days(col_all)
+        
+        for document in col.find().sort("day"):
+            alldays = he.get_days_col(col_all)
             [multi, missing]  = check.check_int_list(alldays)
             if len(missing) == 0:
-                if re.alreadyExists(document["_id"], col_all): 
+                if re.checker.alreadyExists(document["_id"], col_all): 
                     continue
                 else:
                     document["day"] = max(alldays) + 1

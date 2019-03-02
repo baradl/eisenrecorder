@@ -2,6 +2,7 @@ from datetime import datetime
 from tabulate import tabulate
 import converter
 import check
+import os, glob
 
 
 def month_now():
@@ -34,24 +35,14 @@ def string_to_list(string, sep = ","):
     list_ = string.split(sep)
     for i in range(len(list_)):
         try: list_[i] = int(list_[i])
-        except: list_[i] = float(list_[i])
+        except: 
+            try: list_[i] = float(list_[i])
+            except: list_[i] = str(list_[i])
     return list_
 
 
-def check_day(day):
-    if len(day) == 1: 
-        day = "0" + day
-        return day
-    if len(day) > 2: 
-        print("ATTENTION: Incorrect day format: ", day)
-        print("Deleting every digit but the first two.")
-        day = day[0] + day[1]
-    if int(day) > 31: 
-        print("Number too high for day format. Shutting down.")
-        raise SystemExit
-    return day
 
-def get_days(col,*db):
+def get_days_col(col,*db):
     if type(col) == str: col = db(col)
     
     days = []
@@ -59,6 +50,16 @@ def get_days(col,*db):
         days.append(int(document["day"]))
     return days
 
+def get_days_dir():
+    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/backup"
+    os.chdir(directory)
+    files = glob.glob("*.txt")
+    days = []
+    for file in files:
+        file = file.replace(".txt","")
+        file = int(file)
+        days.append(file)
+    return days
 
 
 def divide_int_list(int_list):
@@ -84,27 +85,40 @@ def find_substring_in_stringlist(stringlist, substring):
     result = []
     
     for string in stringlist:
-        string = string.lower()
-        if substring in string: result.append(string)
+        substring = substring.lower()
+        stringnew = string.lower()
+        if substring in stringnew: result.append(string)
     
     return result
 
 
-        
+def swap(x1,x2):
+    xh = x1
+    x1 = x2
+    x2 = xh
+    return [x1,x2]      
 
     
 def abbreviation():
     abbrev = tabulate([['BP', "Benchpress"],
                     ["CGBP", "Closegrip-Benchpress"],
                     ["OHP","Overheadpress"],
-                    ["Inc-BP(DB)", "Incline-Benchpress with Dumbells"],
+                    ["Inc-BP", "Incline-Benchpress"],
+                    ["DB", "Dumbell"],
+                    ["BB", "Barbell"],
                     ["FP","Face-Pulls"],
                     ["PD1","Pushdown one arm"],
+                    ["PD2","Pushdown two arms"],
+                    ["OH1","Overhead Tricep one arm"],
+                    ["OH2","Overhead Tricep two arms"],
                     ["M", "Machine"],
                     ["HC","Hammercurls"],
                     ['DL', "Deadlift"],
                     ["RDL","Romanian Deadlift"],
-                    ["LZ", "Lat-Zug"]],
+                    ["LZ(b)", "Lat-Zug (breit)"],
+                    ["LZ(e)", "Lat-Zug (eng)"],
+                    ["KZ(e)", "Klimmzug (eng)"],
+                    ["KZ(b)", "Klimmzug (breit)"]],
             headers=['Abbreviation', 'Exercise'])
     
     print(indent())
