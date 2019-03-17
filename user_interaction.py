@@ -46,7 +46,7 @@ def user_insert(db, col = True):
     elif workout_type == "run": 
         stats = input("Distance in km and time in minutes (dis time): ")
         run = conv.convert_run(stats)
-        exercises.append(run)
+        exercises = run
         
     comment_ = input("Any comments regarding the session: ")
     if len(comment_) < 3: comment_ = ""
