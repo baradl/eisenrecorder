@@ -11,21 +11,52 @@ def month_now():
 def year_now():
     return datetime.now().year
 
-        
+ 
+def monthly_days():
+    days = [31,28,31,30,31,30,31,31,30,31,30,31]
+    current_year = datetime.now().year
+    if current_year % 4 == 0:
+        days[1] = 29
+    return days
 
-def days_in_month(month, leap = False):
+
+
+
+def get_day_in_year(date):
+    date = date.split(".")
+    day = int(date[0])
+    month = int(date[1])
+    days = monthly_days()
+    
+    assert month <= 12
+    assert day < days[month-1]
+    
+    consecutive_days = 0
+    
+    for i in range(month-1):
+        consecutive_days += days[i]
+    
+    return consecutive_days + day       
+
+
+
+
+
+def days_in_month(month):
     if type(month) == str:
         if len(month) <= 2: month = converter.convert_to_month(int(month))
     elif type(month) == int: month = converter.convert_to_month(month)
     
     months = ["January", "February", "March", "April","May", "June", "July",
               "August", "September", "October", "Novemver", "December"]
-    days_in_months = [31,28,31,30,31,30,31,31,30,31,30,31]
-    if leap: days_in_months[1] = 29
+    
+    days_in_months = monthly_days()
     
     index = months.index(month)
     return days_in_months[index]
-    
+
+
+
 def indent(): 
     return "_______________________________________________________________________________\n"
 
