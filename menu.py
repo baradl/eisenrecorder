@@ -79,7 +79,8 @@ def user_choose_database(myclient):
 
 
 def user_menu(db):
-    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. See month/year/all")
+    col = db["AllSessions"]
+    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. See single session \n5. See month/year/all")
     input_ = input("\nChoose number or press enter for exit: ")
     
     print(he.indent())
@@ -89,33 +90,33 @@ def user_menu(db):
     
     elif input_ == "2":
         date = input("Date to delete (dd.mm.yy): ")
-        [day, month, year] = conv.convert_date(date)
-        col_name = conv.convert_to_month(month) + "20" + str(year)
-        col = db[col_name]
-        if len(str(day)) < 2: day = "0" + str(day)
-        else: day = str(day) 
-        session = re.find_session(col, day)
+        cons_day = he.get_day_in_year(date)
+        
+        session = re.find_session(col, cons_day)
         re.printer.print_session(session)
-        dec = input("Delete this session?\n")
-        if dec == "yes": re.delete_session(col, day)
+        dec = input("Delete this session [y/n]: ")
+        if dec == "y": re.delete_session(col, cons_day)
     
     elif input_ == "3":
         date = input("Date of session (dd.mm.yy): ")
-        [day, month, year] = conv.convert_date(date)
-        col_name = conv.convert_to_month(month) + "20" + str(year)
-        col = db[col_name]
-        if len(str(day)) == 1: day = "0" + str(day)
-        else: day = str(day)
-        session = re.find_session(col, day)
+        cons_day = he.get_day_in_year(date)
+        
+        session = re.find_session(col, cons_day)
         re.printer.print_session(session)
-        dec = input("Edit this this session? ")
-        if dec == "yes": user_menu_edit(session, col)
+        dec = input("Edit this this session [y/n]: ")
+        if dec == "y": user_menu_edit(session, col)
         else: 
             print("No valid input. Going back to menu.")
             user_menu(db)
     
-        
     elif input_ == "4":
+        date = input("Date of session (dd.mm.yy): ")
+        cons_day = he.get_day_in_year(date)
+        
+        session = re.find_session(col, cons_day)
+        re.printer.print_session(session)
+        
+    elif input_ == "5":
         decision = input("What do you want to see [month/year/all]: ")
         
         menu_see(db,decision)
@@ -187,12 +188,13 @@ def user_menu_edit(session, col):
     
     print(he.indent())
     if dec == "1":
-        newday = input("New day: ")
-        re.updater.update_day(session, newday)
+        newdate = input("New date (dd.mm.yy): ")
+        newday = he.get_day_in_year(newdate)
+        re.updater.update_day(session, newday, col)
     elif dec == "2":
         oldtype = session["type"]
         newtype = input("New type: ")
-        re.updater.update_type(session, newtype)
+        re.updater.update_type(session, newtype, col)
         if oldtype == "off":
             print("Insert the new exercises.")
             if newtype == "run":
@@ -228,11 +230,12 @@ def user_menu_edit(session, col):
     elif dec == "4":
         ex = input("List exercises to be deleted: ")
         ex_list = ex.split()
-        re.updater.delete_exercise(session, ex_list)
+        re.updater.delete_exercise(session, ex_list, col)
         
     elif dec == "5":
         newcomment = input("New comment: ")
         re.updater.update_comments(session, newcomment, col)
+        
     else:
         dec = input("No valid input. Back to menu? ")
         if dec == "yes": user_menu_edit()

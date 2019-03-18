@@ -28,7 +28,6 @@ def print_session(doc):
                 print_exercise(doc["exercise" + str(i+1)])
     if len(doc["comments"]) > 3: print("Comments: " + doc["comments"])
     print(he.indent())
-    #print("\n")    
 
 
 def print_exercise(exercise):

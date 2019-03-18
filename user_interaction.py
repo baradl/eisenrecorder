@@ -55,24 +55,7 @@ def user_insert(db):
             print("Closing Eisenrecorder.")
             exit()
                 
-# =============================================================================
-#     if col == True: 
-#         col = input("Collection: ")
-#         col = conv.convert_col_input(col)
-#         #if he.is_host_local(db.client): col = col + "_cache"
-#         day = input("Day: ")
-#         day = check.check_day(day)
-#         while re.checker.check_doc_exist(db, db[col], day):
-#             x = input("Day already exists for this month. Change day? ")
-#             if x == "yes": 
-#                 day = input("New day: ")
-#                 day = check.check_day(day)
-#     else: 
-#         if type(col) != str: col = col.name
-#         day = input("Day: ")
-#         day = check.check_day(day)
-# =============================================================================
-    
+   
     workout_type = input("workout type: ")
     exercises = []
     if workout_type != "off" and workout_type != "run":
@@ -96,7 +79,6 @@ def user_insert(db):
     dic = re.construct_dict_session(cons_day, workout_type, exercises, comment_)
     print(he.indent())
     print("Insert following session:")
-    #print("Collection:",col)
     print("Date:", date)
     print("Type:", workout_type)
     if workout_type != "off" and workout_type != "run":

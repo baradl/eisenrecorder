@@ -22,10 +22,8 @@ def update_exercise(doc, newexercise, col):
     col.save(doc)
     
         
-def update_day(doc, newday,col):
-    if type(newday) == int: newday = str(newday)
-    if len(newday) < 2: newday = "0" + newday
-    
+def update_day(doc, newday ,col):
+       
     doc["day"] = newday
     col.save(doc)
 
