@@ -46,11 +46,12 @@ def get_day_in_year(date):
     
     
     consecutive_days = 0
-    while year > 2019:
+    year_ = 2019
+    while year_ < year:
         consecutive_days += 365
-        if leap(year): consecutive_days += 1
+        if leap(year_): consecutive_days += 1
         
-        year -= 1
+        year_ += 1
     
     for i in range(month-1):
         consecutive_days += days[i]

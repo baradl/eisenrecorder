@@ -121,8 +121,8 @@ def user_menu(db):
         menu_see(db,decision)
         
     else: 
-        dec = input("Wrong number? ")
-        if dec == "yes": user_menu(db)          
+        dec = input("Wrong number [y/n]: ")
+        if dec == "y": user_menu(db)          
     
     print(he.indent())
     dec = input("Back to database menu [y/n]: ")
@@ -239,8 +239,8 @@ def user_menu_edit(session, col):
         else: raise SystemExit
     
     re.printer.print_session(session)
-    dec = input("Back to database menu: ")
-    if dec == "yes": user_menu(col.database)
+    dec = input("Back to database menu [y/n]: ")
+    if dec == "y": user_menu(col.database)
         
             
  

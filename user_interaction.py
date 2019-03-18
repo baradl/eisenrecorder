@@ -2,6 +2,9 @@ import request as re
 import helper as he
 from helper import converter as conv
 from helper import check
+
+import printer
+
 import menu
 import cache
 
@@ -14,24 +17,62 @@ import cache
 ###############################################################################
 
     
-def user_insert(db, col = True):    
+def user_insert(db):    
+    
+    col = db["AllSessions"]
     
     print(he.indent())
-    if col == True: 
-        col = input("Collection: ")
-        col = conv.convert_col_input(col)
-        #if he.is_host_local(db.client): col = col + "_cache"
-        day = input("Day: ")
-        day = check.check_day(day)
-        while re.checker.check_doc_exist(db, db[col], day):
-            x = input("Day already exists for this month. Change day? ")
-            if x == "yes": 
-                day = input("New day: ")
-                day = check.check_day(day)
-    else: 
-        if type(col) != str: col = col.name
-        day = input("Day: ")
-        day = check.check_day(day)
+    
+    
+    dec = input("Current year [y/n]: ")
+    if dec == "y": year = "2019"
+    else:
+        year = input("Year: ")
+        
+    month = input("Month: ")
+    month = str(conv.convert_month_to_int(month))
+    
+    day = input("Day: ")
+    day = check.check_day(day)
+    
+    if len(day) == 1: day = "0" + day
+    if len(month) == 1: month = "0" + month
+    if len(year) ==2: year = "20" + year
+    
+    date = day + "." + month + "." + year
+    
+    cons_day = he.get_day_in_year(date)
+    
+    while re.checker.check_doc_exist(db, col, cons_day):
+        dec = input("Day already exists. Change day [y/n]: ")
+        
+        doc = re.find_session(col, cons_day)
+        printer.print_sessions(doc)
+        
+        if dec == "y": 
+            user_insert(db)
+        else:
+            print("Closing Eisenrecorder.")
+            exit()
+                
+# =============================================================================
+#     if col == True: 
+#         col = input("Collection: ")
+#         col = conv.convert_col_input(col)
+#         #if he.is_host_local(db.client): col = col + "_cache"
+#         day = input("Day: ")
+#         day = check.check_day(day)
+#         while re.checker.check_doc_exist(db, db[col], day):
+#             x = input("Day already exists for this month. Change day? ")
+#             if x == "yes": 
+#                 day = input("New day: ")
+#                 day = check.check_day(day)
+#     else: 
+#         if type(col) != str: col = col.name
+#         day = input("Day: ")
+#         day = check.check_day(day)
+# =============================================================================
+    
     workout_type = input("workout type: ")
     exercises = []
     if workout_type != "off" and workout_type != "run":
@@ -52,22 +93,22 @@ def user_insert(db, col = True):
     if len(comment_) < 3: comment_ = ""
         
     
-    dic = re.construct_dict_session(day,workout_type, exercises, comment_)
+    dic = re.construct_dict_session(cons_day, workout_type, exercises, comment_)
     print(he.indent())
     print("Insert following session:")
-    print("Collection:",col)
-    print("Day:", day)
+    #print("Collection:",col)
+    print("Date:", date)
     print("Type:", workout_type)
     if workout_type != "off" and workout_type != "run":
         print("Exercise list:", dic["exercise list"])
     
     print(he.indent())
-    decision = input("Correct? ")
-    if decision == "yes": re.insert_session(db[col], dic)
+    decision = input("Correct [y/n]: ")
+    if decision == "y": re.insert_session(col, dic)
     else: user_insert(db)
     
-    decision = input("Insert another session? ")
-    if decision != "no":user_insert(db)
+    decision = input("Insert another session [y/n]: ")
+    if decision != "n": user_insert(db)
     
 
 

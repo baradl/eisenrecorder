@@ -16,7 +16,7 @@ def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     global TYPES
     assert workout_type in TYPES
     
-    if type(day) == int: day = str(day)
+    #if type(day) == int: day = str(day)
     doc = {"day": day, "type": workout_type}
     
     if workout_type == "run": doc.update({"run": exercises})
