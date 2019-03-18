@@ -4,6 +4,7 @@ import connect as con
 import user_interaction as ui
 import request as re
 import cache
+import printer
 
 def user_start():
     if con.check_internet() and not cache.is_empty():
@@ -11,14 +12,17 @@ def user_start():
         if decision == "yes":
             cache.upload_cache()
     print(he.indent())
-    print("1. Edit Database \n2. Edit Cache \n3. Backup")
+    print("1. Edit Sessions \n2. Edit Cache \n3. Backup")
     dec1 = input("\nChoose number or press enter for exit: ")
     
     if dec1 == "1":
         if con.check_internet():
             print("Connecting to online host.")
+            print(he.indent())
+            print("\n")
             client = con.connect_to_client()
-            user_choose_database(client)
+            db = client["TrainingLogData"]
+            user_menu(db)
         else:
             print("No network service. Going back to main menu")
             user_start()
@@ -75,7 +79,7 @@ def user_choose_database(myclient):
 
 
 def user_menu(db):
-    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. Create new month \n5. Delete whole month \n6. See whole month \n7. Update Collection AllSessions")
+    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. See month/year/all")
     input_ = input("\nChoose number or press enter for exit: ")
     
     print(he.indent())
@@ -110,51 +114,67 @@ def user_menu(db):
             print("No valid input. Going back to menu.")
             user_menu(db)
     
+        
     elif input_ == "4":
-        date = input("Month to create: ")
-        try: date = int(date)
-        except: date = date[0:3]
-        date = conv.convert_to_month(date)
-        year = str(he.year_now())
-        new_col = db[date + year]
-        dec = input("Insert new document? ")
-        if dec == "yes": ui.user_insert(db, new_col.name)
-    
-    elif input_ == "5":
-        date = input("Month to delete: ")
-        try: date = int(date)
-        except: date = date[0:3]
-        date = conv.convert_to_month(date)
-        year = str(he.year_now())
-        col = db[date + year]
-        re.delete_session(col, "all")
-        print("Collections of", db.name,":", db.list_collection_names() )
+        decision = input("What do you want to see [month/year/all]: ")
         
-    elif input_ == "6":
-        month = input("See all sessions of which month: ")
-        try: month = int(month)
-        except: month = month[0:3]
+        menu_see(db,decision)
         
-        month = conv.convert_to_month(month)
-        
-        month = month + str(he.year_now())
-        
-        
-        col = db[month]
-        #re.print_collection(col)
-        re.printer.print_sort_col(col)
-    
-    elif input_ == "7":
-        ui.insert_in_all(db)
-    
     else: 
         dec = input("Wrong number? ")
         if dec == "yes": user_menu(db)          
     
     print(he.indent())
-    dec = input("Back to database menu: ")
-    if dec == "yes": user_menu(db)
+    dec = input("Back to database menu [y/n]: ")
+    if dec == "y": user_menu(db)
     
+ 
+###############################################################################
+    
+    
+    
+def menu_see(db, decision):
+    
+    if decision == "month":
+        date = input("mm.yyyy: ")
+        [month, year] = date.split(".")
+        
+        if len(year) == 2: year = "20" + year
+        
+        month = conv.convert_month_to_int(month)
+        
+        monthly_days = he.monthly_days(int(year))
+        
+        days = [sum(monthly_days[:month-1])+1,sum(monthly_days[:month])]
+        
+        printer.print_allsessions(db, days)
+    
+    elif decision == "year":
+        year = input("Which year would you like to see: ")
+        
+        year = int(year)
+        days_in_year = 365
+        
+        if he.leap(year): days_in_year += 1
+        
+        consecutive_days = 0
+        while year > 2019:
+            consecutive_days += 365
+            if he.leap(year): consecutive_days += 1
+        
+            year -= 1
+        
+        printer.print_allsessions(db, [consecutive_days + 1, consecutive_days 
+                                       + days_in_year])
+        
+        
+    elif decision == "all":
+        printer.print_allsessions(db)
+        
+    else:
+        print("No valid input. Closing.")
+        
+        
     
     
 ###############################################################################

@@ -12,26 +12,45 @@ def year_now():
     return datetime.now().year
 
  
-def monthly_days():
+def monthly_days(year):
     days = [31,28,31,30,31,30,31,31,30,31,30,31]
-    current_year = datetime.now().year
-    if current_year % 4 == 0:
-        days[1] = 29
+    if leap(year): days[1] = 29
+    
     return days
 
 
+def leap(year):
+    if year % 4 == 0: return True
+    else: return False
 
 
 def get_day_in_year(date):
     date = date.split(".")
     day = int(date[0])
     month = int(date[1])
-    days = monthly_days()
     
+    
+    if len(date) == 2:
+        year = 2019
+    else:
+        year = date[2]
+        if len(year) == 2:
+            year = "20" + year
+    
+    assert len(year) == 4
+    year = int(year)
+    assert year >= 2019
     assert month <= 12
+    days = monthly_days(year)
     assert day < days[month-1]
     
+    
     consecutive_days = 0
+    while year > 2019:
+        consecutive_days += 365
+        if leap(year): consecutive_days += 1
+        
+        year -= 1
     
     for i in range(month-1):
         consecutive_days += days[i]

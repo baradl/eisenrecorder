@@ -8,7 +8,7 @@ import os
 
 from ctypes import windll, byref,wintypes
 
-os.system("mode con cols=79 lines=43")
+#os.system("mode con cols=79 lines=43")
 
 
 STDOUT = -11

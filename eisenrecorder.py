@@ -15,8 +15,8 @@ print("Eisenrecorder started".center(79))
 while True:
     ui.menu.user_start()
     print(he.indent())
-    dec2 = input("Back to main menu: ")
-    if dec2 != "yes":
+    dec2 = input("Back to main menu [y/n]: ")
+    if dec2 != "y":
         print("\n\n")
         print("Closing Eisenrecorder".center(79))
         print("\n\n")

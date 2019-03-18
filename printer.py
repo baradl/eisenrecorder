@@ -140,6 +140,7 @@ def print_collection(col):
         for document in cursor:
             print_session(document)
 
+
 def print_days(col, days, range = True):
     cursor = col.find().sort("day")
     if range:
@@ -166,10 +167,19 @@ def print_sort_col(col, by = "day"):
 
 
 
-def print_allsessions(db):
+def print_allsessions(db, days = "all"):
     col = db["AllSessions"]
     
-    print_collection(col)    
+    if days == "all":
+        print_collection(col)
+    
+    else:
+        for doc in col.find():
+            if doc["day"] >= days[0] and doc["day"] <= days[1]:
+                print_session(doc)
+                
+    
+
 
 
 
