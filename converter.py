@@ -1,5 +1,5 @@
 import helper as he
-
+import math
 
 def convert_to_month(month):
     """
@@ -112,7 +112,7 @@ def convert_col_input(col):
 def convert_run(string):
     stats = string.split()
     distance = float(stats[0])
-    [minutes, seconds] = convert_time(stats[1])
+    [minutes, seconds] = convert_time_tofloat(stats[1])
     time = minutes + (seconds/60)
     pace = time/distance
     return [distance, time, pace]
@@ -124,7 +124,7 @@ def convert_run(string):
 
 
 
-def convert_time(time):
+def convert_time_tofloat(time):
     time = time.split(":")
     if len(time) == 3:
         hours = int(time[0])
@@ -139,6 +139,22 @@ def convert_time(time):
         seconds = 0
     return [minutes, seconds]
 
+
+def convert_float_totime(time):
+    minutes = math.floor(time)
+    seconds = time - minutes
+    
+    seconds = round(seconds * 60)  
+    seconds = str(seconds)
+    
+    if len(seconds) < 2:
+        seconds = "0" + seconds
+        
+    if minutes >= 60: 
+        hours = math.floor(minutes/60)
+        minutes = minutes - 60*hours
+        return str(hours) + ":" + str(minutes) + ":" + seconds
+    return str(minutes) + ":" + seconds
 
 ###############################################################################
     

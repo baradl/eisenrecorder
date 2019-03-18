@@ -1,10 +1,9 @@
 import helper as he
 import pymongo as pm
+import converter as conv
 
 """Printer"""
 
-def __init__():
-    pass
 
 def print_session(doc):
     print("{")
@@ -15,8 +14,8 @@ def print_session(doc):
         if doc["type"] == "run":
             run = doc["run"]
             print("Distance:", run[0], "km")
-            print("Durationen:", run[1], "min")
-            print("average Pace:", run[2], "min/km")
+            print("Durationen: " + conv.convert_float_totime(run[1]))
+            print("average Pace: " + conv.convert_float_totime(run[2]))
         else:
             n   = doc["amount of exercises"]
             print("Amount of exercises:", n)
@@ -163,3 +162,30 @@ def print_sort_col(col, by = "day"):
     cursor = col.find().sort(by)
     for document in cursor:
         print_session(document)
+        
+
+
+
+def print_allsessions(db):
+    col = db["AllSessions"]
+    
+    print_collection(col)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
