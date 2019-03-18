@@ -98,7 +98,7 @@ def user_menu(db):
         if dec == "y": re.delete_session(col, cons_day)
     
     elif input_ == "3":
-        date = input("Date of session (dd.mm.yy): ")
+        date = input("Date to edit (dd.mm.yy): ")
         cons_day = he.get_day_in_year(date)
         
         session = re.find_session(col, cons_day)

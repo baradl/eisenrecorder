@@ -41,7 +41,7 @@ def insert_session(col, dic):
 
 
 def find_session(col, day):
-    if type(day) == int: day = str(day)
+    #if type(day) == int: day = str(day)
     cursor = col.find()
     for document in cursor:
         if document["day"] == day:
@@ -49,26 +49,10 @@ def find_session(col, day):
         
 
 
-def delete_session(col, day, pre_answer = False, amount = 1):
+def delete_session(col, day):
     cursor = col.find()
-    if type(day) == int: day = str(day)
-    if day == "all":
-        if pre_answer:
-            for document in cursor:    
-                col.delete_one(document)
-        else: 
-            security_question = input("Are you sure to delete everything?\n")
-            if security_question == "yes":
-                for document in cursor:
-                    #printer.print_session(document)
-                    col.delete_one(document)
-    else:
-        counter = 0
-        for document in cursor:
-            if document["day"] == day:
-                col.delete_one(document)
-                counter += 1
-                if counter >= amount: break
+    query = { "day": day }
+    col.delete_one(query)
 
 
 def create_copy(col, db):

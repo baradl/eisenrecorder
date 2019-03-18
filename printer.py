@@ -8,14 +8,23 @@ import converter as conv
 def print_session(doc):
     print(he.indent())
     #print("ID:", doc["_id"])
-    print("Date:", conv.convert_int_todate(doc["day"]))
+    day = doc["day"]
+    
+    assert type(day) == int
+    
+    day = conv.convert_int_todate(day)
+    
+    print("Date:" + day)
     print("Type:", doc["type"])
+    
     if doc["type"] != "off":    
+        
         if doc["type"] == "run":
             run = doc["run"]
             print("Distance:", run[0], "km")
             print("Durationen: " + conv.convert_float_totime(run[1]))
             print("average Pace: " + conv.convert_float_totime(run[2]))
+        
         else:
             n   = doc["amount of exercises"]
             print("Amount of exercises:", n)
@@ -26,6 +35,7 @@ def print_session(doc):
             print(ex[n-1])
             for i in range(n):        
                 print_exercise(doc["exercise" + str(i+1)])
+    
     if len(doc["comments"]) > 3: print("Comments: " + doc["comments"])
     print(he.indent())
 
