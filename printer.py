@@ -6,9 +6,9 @@ import converter as conv
 
 
 def print_session(doc):
-    print("{")
-    print("ID:", doc["_id"])
-    print("Day:", doc["day"])
+    print(he.indent())
+    #print("ID:", doc["_id"])
+    print("Date:", conv.convert_int_todate(doc["day"]))
     print("Type:", doc["type"])
     if doc["type"] != "off":    
         if doc["type"] == "run":
@@ -27,7 +27,8 @@ def print_session(doc):
             for i in range(n):        
                 print_exercise(doc["exercise" + str(i+1)])
     if len(doc["comments"]) > 3: print("Comments: " + doc["comments"])
-    print("}")    
+    print(he.indent())
+    print("\n")    
 
 
 def print_exercise(exercise):

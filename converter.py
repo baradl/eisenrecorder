@@ -175,4 +175,60 @@ def convert_date(string):
 
 
 def convert_int_todate(day):
-    pass
+    day_ = day
+    year = 2019
+    
+    while day_ > 0:
+        days_in_year = 365
+        if he.leap(year): days_in_year += 1
+        
+        if day_ - days_in_year >= 0: 
+            year += 1
+            day -= days_in_year
+            
+        day_ -=  days_in_year  
+    
+    assert day < 365
+    
+    monthly_days = he.monthly_days(year)
+    
+    month = 1
+    while sum(monthly_days[:month-1]) < day:
+        month += 1
+    
+    month -= 1 
+    
+    day = day - sum(monthly_days[:month-1])
+    
+    day = str(day)
+    month = str(month)
+    
+    if len(day) == 1: day = "0" + day
+    if len(month) == 1: month = "0" + month
+    
+    return day + "." + month + "." + str(year)
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
