@@ -6,10 +6,15 @@ import request as re
 import cache
 import printer
 
+
+
+###############################################################################
+
 def user_start():
     if con.check_internet() and not cache.is_empty():
-        decision = input("Cache can be uploaded. Confirm? ")
-        if decision == "yes":
+        print(he.indent())
+        decision = input("Cache can be uploaded. Confirm [y/n]: ")
+        if decision == "y":
             cache.upload_cache()
     print(he.indent())
     print("1. Edit Sessions \n2. Edit Cache \n3. Backup")
@@ -252,7 +257,7 @@ def user_menu_edit(session, col):
     
 def menu_cache():
     import cache
-    print("1. Insert into cache. \n2. Upload cache \n3. See all cache sessions \n4. Delete cached sessions")
+    print("1. Insert cache \n2. Upload cache \n3. See cached sessions \n4. Delete cached sessions")
     dec = input("\nChoose number or press enter for exit: ")
     
     if dec == "1":
@@ -266,13 +271,12 @@ def menu_cache():
     elif dec == "3":
         cache.see_cache()
     elif dec == "4":
-        date = input("Type 'all' or specific date: ")
-        
-        try:
-            date = conv.convert_date(date)
+        date = input("['all'/'dd.mm.yy']: ")
+        if date == "all":
             cache.delete_cache(date)
-        except: 
-            cache.delete_cache(date)           
+        else:
+            day = he.get_day_in_year(date)
+            cache.delete_cache(day)
             
         
     else:

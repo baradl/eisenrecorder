@@ -50,7 +50,6 @@ def find_session(col, day):
 
 
 def delete_session(col, day):
-    cursor = col.find()
     query = { "day": day }
     col.delete_one(query)
 

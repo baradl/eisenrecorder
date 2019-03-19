@@ -31,7 +31,7 @@ def get_day_in_year(date):
     
     
     if len(date) == 2:
-        year = "2019"
+        year = year_now()
     else:
         year = date[2]
         if len(year) == 2:

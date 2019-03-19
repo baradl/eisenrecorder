@@ -14,7 +14,7 @@ def create_backup(col):
         name = str(document["day"])
         if len(name) == 1: name = "0" + name
         filepath = directory + name + ".txt"
-        pickle.dump(document, open(filepath, "wb"))#
+        pickle.dump(document, open(filepath, "wb"))
         
 
 
@@ -35,6 +35,8 @@ def check_backup():
         print("All sessions ("+ str(max(days)) +") in backup")
         
         
+
+
 def upload_backup(db):
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/backup/"
     os.chdir(directory)
