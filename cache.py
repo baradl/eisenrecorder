@@ -1,3 +1,9 @@
+"""
+Collection of functions to work with the cache.
+"""
+
+###############################################################################
+
 import helper as he
 import request as re
 import checker
@@ -9,6 +15,14 @@ import menu
 ###############################################################################
 
 
+
+
+
+"""
+Inserts a session into the cache. Very similar to insertion into DB. The inserted
+session is afterwards pickled and saved locally. The file name is the number of
+consecutive days (beginning at 01.01.2019) corresponding to the date of interest.
+"""
 def insert_cache():   
     while True:
         
@@ -76,8 +90,10 @@ def insert_cache():
 ###############################################################################
 
 
-
-
+"""
+Saves the date (meaning the dictionary corresponding to a session) as a pickled
+file into a folder prepared beforehand.
+"""
 def save_cache_entry(data):
     day = data["day"]
     
@@ -99,8 +115,14 @@ def save_cache_entry(data):
     
     
     
+"""
+Takes all files in the cache directory, unpickles and uploads them into the
+collection "AllSessions". Before the upload is finalized it is verified that 
+no file corresponding to the same date already exists. If that is the case the
+user has to confirm the upload (two workouts in one day are possible).
 
-       
+Since the online client is just used for this function it is closed afterwards.
+"""       
 def upload_cache():
     import connect as con
     client = con.connect_to_client()
@@ -129,6 +151,9 @@ def upload_cache():
 
         
 
+"""
+Prints out a list of dates of all cached sessions.
+"""
 def see_cache():
     print(he.indent())
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
@@ -151,7 +176,10 @@ def see_cache():
         
         
         
-
+"""
+Deletes one or all cached sessions. If a session shall be deleted that is not
+existent the user goes back to the start menu.
+"""
 def delete_cache(day):
     
     
@@ -168,8 +196,8 @@ def delete_cache(day):
     else:
         file = find_session(day)
         if file == None:
-            print("Date not found. Closing.")
-            exit()
+            print("Date not found. Going back to main menu.")
+            menu.user_start()
         else:
             for file_ in file:
                 os.remove(directory + file_)
@@ -178,8 +206,8 @@ def delete_cache(day):
         
         
 """
-returns pickled file if day exists in cache and None if such a day does not 
-exist
+Returns the list of pickled files that contain the day and None if such a day 
+does not exists.
 """            
 def find_session(day):
     assert type(day) == int
@@ -202,7 +230,9 @@ def find_session(day):
     
     
     
-    
+"""
+Checks if cache is currently empty.
+"""    
 def is_empty():
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
     os.chdir(directory)
