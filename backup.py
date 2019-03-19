@@ -1,3 +1,13 @@
+"""
+Collection of back_up functions
+"""
+
+
+
+
+
+
+
 import pickle
 import helper as he
 from helper import check
@@ -5,6 +15,12 @@ import os, glob
 #from request import delete_session
 
 
+
+"""
+Creates local backup for given collection. In this case the collection of interest
+is "AllSessions". Files are saved on machine as pickled files. File name is the 
+consecutive number of days (beginning at 01.01.2019) corresponding to its date.
+"""
 def create_backup(col):
     if type(col) is str:assert col is "AllSessions"
     else: assert col.name is "AllSessions"
@@ -19,6 +35,14 @@ def create_backup(col):
 
 
 
+"""
+Checks the backup for multiple or missing entries. Informs user about respective
+dates (either missing or multiple times mentioned).
+Mist is a list of two lists. These two lists contain the missing days and the 
+multiple mentioned days.
+If no mistakes have been made the user is informed about the number of backed up
+sessions.
+"""
 def check_backup():
     days = he.get_days_dir()
     multi = False
@@ -36,6 +60,12 @@ def check_backup():
         
         
 
+
+"""
+The local backup can be uploaded. It is verified that no uploaded backup already
+exists. If that is the case the name of the new upload is changed.
+To upload files the backup is unpickled.
+"""
 
 def upload_backup(db):
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/backup/"
