@@ -1,3 +1,8 @@
+"""
+Collection of update functions. One can update the day, type, comments of session.
+In addition one can change exercises.
+"""
+
 import checker
 ###############################################################################
 """Updater"""               
@@ -21,13 +26,13 @@ def update_exercise(doc, newexercise, col):
     checker.check_exlist(doc)
     col.save(doc)
     
-        
+###############################################################################      
 def update_day(doc, newday ,col):
        
     doc["day"] = newday
     col.save(doc)
 
-
+###############################################################################
 def update_type(doc, newtype, col):  
     if doc["type"] == "off" and newtype != "off":
         doc.update({"exercise list": []})             
@@ -35,40 +40,43 @@ def update_type(doc, newtype, col):
     doc["type"] = newtype
     col.save(doc)
 
+###############################################################################
 def update_comments(doc, newcomment, col):
     doc.update({"comments": newcomment})
     col.save(doc)
     
 
 
-def update(doc, new, col):
-    typ = type(new)
-    global TYPES
-    
-    if typ == str:
-        if typ in TYPES: kind = "type"
-        elif len(new) == 2: kind = "day"
-        
-    elif typ == list: kind = "exercise"
-    else: 
-        print("No valid input.")
-        raise SystemExit
-        
-    
-    if kind == "exercise": 
-        assert len(new) <= 4
-        assert len(new) >= 3
-        update_exercise(doc, new,col)
-    elif kind == "type":
-        update_type(doc, new,col)
-    elif kind == "day": 
-        update_day(doc, new,col)
+# =============================================================================
+# def update(doc, new, col):
+#     typ = type(new)
+#     global TYPES
+#     
+#     if typ == str:
+#         if typ in TYPES: kind = "type"
+#         elif len(new) == 2: kind = "day"
+#         
+#     elif typ == list: kind = "exercise"
+#     else: 
+#         print("No valid input.")
+#         raise SystemExit
+#         
+#     
+#     if kind == "exercise": 
+#         assert len(new) <= 4
+#         assert len(new) >= 3
+#         update_exercise(doc, new,col)
+#     elif kind == "type":
+#         update_type(doc, new,col)
+#     elif kind == "day": 
+#         update_day(doc, new,col)
+# =============================================================================
     
 
 
 ###############################################################################
 """
-Delete Exercises
+Delete Exercises of a given document.
 """
 
 def delete_exercise(doc, ex_list):

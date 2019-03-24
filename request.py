@@ -1,3 +1,7 @@
+"""
+Collection of functions that interact with the database.
+"""
+
 import helper as he
 import printer
 import checker
@@ -7,9 +11,10 @@ import updater
 TYPES = ["off", "run", "SQ", "DL", "BP", "UB", "LB"]
 
 
-
+###############################################################################
 """
-insert: Name Collection, Tag, Art der Session, Übungen/Laufergebnisse
+Creates a dictionary that shall be later incorporated into the db. Consists of 
+day, workout type, exercises and comments regarding the session.
 """
 
 def construct_dict_session(day, workout_type, exercises = [], comments= ""):
@@ -34,12 +39,20 @@ def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     doc.update({"comments": comments})
     return doc
 
+###############################################################################
+
+"""
+Inserts the above described dictionary into a given collection.
+"""
 def insert_session(col, dic):
     assert type(col) is not str
     col.insert_one(dic)
 
+###############################################################################
 
-
+"""
+Returns session of a given day.
+"""
 def find_session(col, day):
     #if type(day) == int: day = str(day)
     cursor = col.find()
@@ -47,29 +60,35 @@ def find_session(col, day):
         if document["day"] == day:
             return document
         
+###############################################################################
 
-
+"""
+Deletes session of a given day.
+"""
 def delete_session(col, day):
     query = { "day": day }
     col.delete_one(query)
 
-
-def create_copy(col, db):
-    name = col.name + "_copy"
-    new = name
-    i = 1
-    while checker.check_col_exist(db, db[name]):
-        new = name + str(i)
-        i += 1
-    copy = db[new]
-    cursor = col.find()
-    for document in cursor:
-        copy.insert_one(document)
-    return copy
-        
-                
-
-              
+###############################################################################
+    
+# =============================================================================
+# """
+# Creates a copy of a given collection.
+# """
+# def create_copy(col, db):
+#     name = col.name + "_copy"
+#     new = name
+#     i = 1
+#     while checker.check_col_exist(db, db[name]):
+#         new = name + str(i)
+#         i += 1
+#     copy = db[new]
+#     cursor = col.find()
+#     for document in cursor:
+#         copy.insert_one(document)
+#     return copy
+# =============================================================================
+       
         
 ###############################################################################
     

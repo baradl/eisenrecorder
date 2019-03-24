@@ -1,3 +1,7 @@
+"""
+Script for art at the beginning of each start of the Eisenrecorder
+"""
+
 import sys
 #import textwrap
 from colorama import init

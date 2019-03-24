@@ -1,6 +1,19 @@
+"""
+Collection of functions that convert input.
+"""
+
+
 import helper as he
 import math
 
+
+
+###############################################################################
+
+"""
+Given an input for a month in form of an integer or a string convert it to the
+full month name.
+"""
 def convert_to_month(month):
     """
     convert month or abbreveated month to respective integer
@@ -28,7 +41,10 @@ def convert_to_month(month):
 
 ###############################################################################
 
-
+"""
+Converts month to integer corresponding to the month. Input can be a string or
+an integer.
+"""
 
 def convert_month_to_int(month):
     """
@@ -51,7 +67,10 @@ def convert_month_to_int(month):
 
 ###############################################################################
         
-    
+"""
+Converts an input for an exercise to its list form that'll occure within the
+document in the database.
+"""    
     
     
 def convert_input(exercise):
@@ -86,27 +105,34 @@ def convert_input(exercise):
 ###############################################################################
 
 
-
-
-
-def convert_col_input(col):
-    months = ["January", "February", "March", "April","May", "June", "July",
-              "August", "September", "October", "Novemver", "December"]
-    
-    current_year = str(he.datetime.now().year)
-    col2 = col.replace(current_year, "")
-    if col2 in months: return col
-    elif len(col) <= 2: return convert_to_month(int(col)) + current_year
-    elif col in months: return col + current_year
-    else: 
-        print("Invalid input. Shutting down.")
-        raise SystemExit
+# =============================================================================
+# """
+# Converts collection name to the form 'MonthYear'.
+# """
+# 
+# 
+# def convert_col_input(col):
+#     months = ["January", "February", "March", "April","May", "June", "July",
+#               "August", "September", "October", "Novemver", "December"]
+#     
+#     current_year = str(he.datetime.now().year)
+#     col2 = col.replace(current_year, "")
+#     if col2 in months: return col
+#     elif len(col) <= 2: return convert_to_month(int(col)) + current_year
+#     elif col in months: return col + current_year
+#     else: 
+#         print("Invalid input. Shutting down.")
+#         raise SystemExit
+# =============================================================================
 
 
 ###############################################################################
         
         
-        
+"""
+Converts input of a run to its list form that'll occure within the document of
+the database.
+"""        
         
 def convert_run(string):
     stats = string.split()
@@ -121,7 +147,9 @@ def convert_run(string):
 ###############################################################################
 
 
-
+"""
+Converts time string to a list of minutes and seconds.
+"""
 
 def convert_time_tofloat(time):
     time = time.split(":")
@@ -138,7 +166,12 @@ def convert_time_tofloat(time):
         seconds = 0
     return [minutes, seconds]
 
+###############################################################################
 
+
+"""
+Converts float corresponding to a time to a string in the form 'min:sec'
+"""
 def convert_float_totime(time):
     minutes = math.floor(time)
     seconds = time - minutes
@@ -162,7 +195,9 @@ def convert_float_totime(time):
     
 
 
-
+"""
+Converts string corresponding to a date into a list of [day,month,year]
+"""
 
     
 def convert_date(string):
@@ -172,7 +207,12 @@ def convert_date(string):
     year = date[2]
     return [day, month, year] 
 
-
+###############################################################################
+    
+"""
+Converts an integer to its corresponding date where the integer is interpreted
+as the number days after 01.01.2019. 
+"""
 
 def convert_int_todate(day):
     day_ = day

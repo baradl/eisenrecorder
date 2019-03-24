@@ -1,3 +1,7 @@
+"""
+File to be executed to start the Eisenrecorder.
+"""
+
 import user_interaction as ui
 import helper as he
 import print_fancy, delete_pycache

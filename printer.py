@@ -1,9 +1,12 @@
+"""
+Collection of several functions that print a session.
+"""
+
 import helper as he
 import pymongo as pm
 import converter as conv
 
-"""Printer"""
-
+###############################################################################
 
 def print_session(doc):
     print(he.indent())
@@ -39,9 +42,11 @@ def print_session(doc):
     if len(doc["comments"]) > 3: print("Comments: " + doc["comments"])
     print(he.indent())
 
-
+###############################################################################
+    
 def print_exercise(exercise):
     name     = exercise[0]
+    #Type 1 exercise
     if len(exercise) == 4:
         sets     = exercise[1]
         reps     = exercise[2]
@@ -57,7 +62,7 @@ def print_exercise(exercise):
         if extype == 2: print_ex_type2(reps, weight)
         elif extype == 3: print_ex_type3(reps, weight)
         elif extype == 4: print_ex_type4(reps, weight)
-        
+
 """
 type1: sets x reps x weight
 type2: reps x weight, reps x weight,... (inequal weight or reps)
@@ -65,12 +70,16 @@ type3: sets1 x reps1 x weight1, sets2 x reps2 x weight2,... (sets > 1)
 type4: all reps equal but weight is not: reps x weight1, weight2,...
 
 """
+###############################################################################       
+
 def print_ex_type2(reps, weight):
     print(reps[0], "x", weight[0], end = " ")
     for i in range(1,len(reps)):
         print(", ", reps[i], "x", weight[i], end = " ")
     print(" ")
 
+###############################################################################
+    
 def print_ex_type3(reps, weight):
     reps_div = he.divide_int_list(reps)
     weight_div = he.divide_int_list(weight)
@@ -111,6 +120,7 @@ def print_ex_type3(reps, weight):
             weight_div.remove(weight_div[0])
     print(" ")
 
+###############################################################################
 
 def print_ex_type4(reps, weight):
     print( reps[0] , "x" ,weight[0], end= " ")
@@ -124,6 +134,8 @@ type3: sets1 x reps1 x weight1, sets2 x reps2 x weight2,... (sets > 1)
 type4: all reps equal but weight is not: reps x weight1, weight2,...
 
 """
+
+###############################################################################
 def get_ex_type(reps, weight):
     reps_div     = he.divide_int_list(reps)
     weight_div   = he.divide_int_list(weight)
@@ -139,6 +151,7 @@ def get_ex_type(reps, weight):
 #         print(reps[m-1], "x", weight[m-1])
 # =============================================================================
         
+###############################################################################
         
 def print_collection(col):
     if type(col) is pm.cursor.Cursor:
@@ -150,7 +163,7 @@ def print_collection(col):
         for document in cursor:
             print_session(document)
 
-
+###############################################################################
 def print_days(col, days, range = True):
     cursor = col.find().sort("day")
     if range:
@@ -162,7 +175,8 @@ def print_days(col, days, range = True):
             if document["day"] in days:
                 print_session(document)
                 
-   
+
+###############################################################################
 """
 Prints sorted version of given collection. Problems with returning a sorted
 collection because .sort() returns type pm.cursor.Cursor and not a collection.
@@ -174,7 +188,7 @@ def print_sort_col(col, by = "day"):
     for document in cursor:
         print_session(document)
         
-
+###############################################################################
 
 
 def print_allsessions(db, days = "all"):

@@ -16,7 +16,9 @@ import cache
 
 ###############################################################################
 
-    
+"""
+User menu to insert a session into the db.
+"""
 def user_insert(db):    
     
     col = db["AllSessions"]
@@ -98,29 +100,35 @@ def user_insert(db):
 ###############################################################################
 
 
-
-def insert_in_all(db):
-    col_all = db["AllSessions"]
-    
-    
-    list_col = db.list_collection_names()
-    if "AllSessions" in list_col:
-        list_col.remove("AllSessions")
-    for col_name in list_col:
-        col = db[col_name]
-        
-        for document in col.find().sort("day"):
-            alldays = he.get_days_col(col_all)
-            [multi, missing]  = check.check_int_list(alldays)
-            if len(missing) == 0:
-                if re.checker.alreadyExists(document["_id"], col_all): 
-                    continue
-                else:
-                    document["day"] = max(alldays) + 1
-                    col_all.insert_one(document)
-            else: 
-                print("These days are missing: ", missing)
-                print("Insert these manually before automated insertion.")      
+# =============================================================================
+# """
+# Inserts all entries of all collections into the collection 'AllSessions'. Nothing
+# if inserted twice. If entry already exists it is skipped.
+# """
+# 
+# def insert_in_all(db):
+#     col_all = db["AllSessions"]
+#     
+#     
+#     list_col = db.list_collection_names()
+#     if "AllSessions" in list_col:
+#         list_col.remove("AllSessions")
+#     for col_name in list_col:
+#         col = db[col_name]
+#         
+#         for document in col.find().sort("day"):
+#             alldays = he.get_days_col(col_all)
+#             [multi, missing]  = check.check_int_list(alldays)
+#             if len(missing) == 0:
+#                 if re.checker.alreadyExists(document["_id"], col_all): 
+#                     continue
+#                 else:
+#                     document["day"] = max(alldays) + 1
+#                     col_all.insert_one(document)
+#             else: 
+#                 print("These days are missing: ", missing)
+#                 print("Insert these manually before automated insertion.")      
+# =============================================================================
     
     
     

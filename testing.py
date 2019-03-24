@@ -1,3 +1,7 @@
+"""
+Script to set up easily everything to test functions.
+"""
+
 import connect
 import request
 

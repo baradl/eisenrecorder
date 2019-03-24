@@ -1,3 +1,7 @@
+"""
+Collection of menus used within the UI.
+"""
+
 import helper as he
 from helper import converter as conv
 import connect as con
@@ -9,6 +13,10 @@ import printer
 
 
 ###############################################################################
+
+"""
+Start menu. User can work on sessions, backup or cache.
+"""
 
 def user_start():
     if con.check_internet() and not cache.is_empty():
@@ -45,43 +53,49 @@ def user_start():
 ###############################################################################
 
     
-
-
-
-
-def user_choose_database(myclient):        
-    print("List of databases:")
-    print(myclient.list_database_names())
-    print("\n")
-    print("List of collections in TrainingLogData:")
-    print(myclient["TrainingLogData"].list_collection_names())
-    print("\n")
-    x = input("Standard mode or test mode: ")
-    
-    if x == "test":
-        x = input("Database to be referenced: ")
-        db = myclient[x]
-        print("Collections: ", db.list_collection_names())
-        print(he.indent())
-        #user_menu(db)
-    else:
-        print("Currently working on:",end = " ")
-        current_month = conv.convert_to_month(he.month_now())
-        current_year = str(he.year_now())
-        print(current_month + current_year)
-        db = myclient["TrainingLogData"]
-        print(he.indent())
-        #user_menu(db)
-
-    user_menu(db)
-
-
-
+# =============================================================================
+# """
+# User can choose between different databases to reference.
+# """
+# 
+# 
+# def user_choose_database(myclient):        
+#     print("List of databases:")
+#     print(myclient.list_database_names())
+#     print("\n")
+#     print("List of collections in TrainingLogData:")
+#     print(myclient["TrainingLogData"].list_collection_names())
+#     print("\n")
+#     x = input("Standard mode or test mode: ")
+#     
+#     if x == "test":
+#         x = input("Database to be referenced: ")
+#         db = myclient[x]
+#         print("Collections: ", db.list_collection_names())
+#         print(he.indent())
+#         #user_menu(db)
+#     else:
+#         print("Currently working on:",end = " ")
+#         current_month = conv.convert_to_month(he.month_now())
+#         current_year = str(he.year_now())
+#         print(current_month + current_year)
+#         db = myclient["TrainingLogData"]
+#         print(he.indent())
+#         #user_menu(db)
+# 
+#     user_menu(db)
+# =============================================================================
 
 
 
 ###############################################################################
 
+
+"""
+When interacting with sessions the user can insert, edit and delete sessions. 
+In addition one can print a single sessions, a month/year of sessions or all 
+sessions.
+"""
 
 def user_menu(db):
     col = db["AllSessions"]
@@ -137,7 +151,9 @@ def user_menu(db):
  
 ###############################################################################
     
-    
+"""
+Menu to let the user input the sessions one wants to print.
+""" 
     
 def menu_see(db, decision):
     
@@ -185,6 +201,9 @@ def menu_see(db, decision):
     
 ###############################################################################
 
+"""
+If a session shall be edited the user is guided via this menu. 
+"""
 
 def user_menu_edit(session, col):
     print(he.indent())
@@ -253,7 +272,10 @@ def user_menu_edit(session, col):
             
  
 ###############################################################################
-    
+
+"""
+Menu to guide user through cache option.
+"""  
     
 def menu_cache():
     import cache
@@ -285,6 +307,9 @@ def menu_cache():
 
 ###############################################################################        
 
+"""
+Menu to guide the user through backup menu.
+"""
 
 def backup_menu():
     import backup

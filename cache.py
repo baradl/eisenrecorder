@@ -231,7 +231,7 @@ def find_session(day):
     
     
 """
-Checks if cache is currently empty.
+Checks if cache is currently empty. Returns boolean.
 """    
 def is_empty():
     directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
