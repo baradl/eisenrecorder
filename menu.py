@@ -9,7 +9,7 @@ import user_interaction as ui
 import request as re
 import cache
 import printer
-
+import filter
 
 
 ###############################################################################
@@ -99,7 +99,7 @@ sessions.
 
 def user_menu(db):
     col = db["AllSessions"]
-    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. See single session \n5. See month/year/all")
+    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. See single session \n5. See week/month/year/all")
     input_ = input("\nChoose number or press enter for exit: ")
     
     print(he.indent())
@@ -139,7 +139,7 @@ def user_menu(db):
         re.printer.print_session(session)
         
     elif input_ == "5":
-        decision = input("What do you want to see [month/year/all]: ")
+        decision = input("What do you want to see [week/month/year/all]: ")
         
         menu_see(db,decision)
         
@@ -160,7 +160,16 @@ Menu to let the user input the sessions one wants to print.
     
 def menu_see(db, decision):
     
-    if decision == "month":
+    if decision == "week":
+        date = input("Date in week of interest: ")
+        
+        [start, end] = he.get_week(date)
+        
+        doc_list = filter.filter_consecutive_days(db, start, end)
+        
+        printer.print_filter(doc_list)
+    
+    elif decision == "month":
         date = input("mm.yyyy: ")
         [month, year] = date.split(".")
         

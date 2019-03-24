@@ -195,14 +195,29 @@ def print_allsessions(db, days = "all"):
     col = db["AllSessions"]
     
     if days == "all":
-        print_collection(col)
+        print_sort_col(col)
     
     else:
-        for doc in col.find():
+        for doc in col.find().sort("day"):
             if doc["day"] >= days[0] and doc["day"] <= days[1]:
                 print_session(doc)
-                
-    
+
+
+###############################################################################
+
+def print_allsessions_type(db, session_type):
+    col = db["AllSessions"]
+    for doc in col.find():
+        if doc["type"] == session_type:
+            print_session(doc)
+
+
+###############################################################################
+            
+            
+def print_filter(doc_list):
+    for doc in doc_list:
+        print_session(doc)
 
 
 

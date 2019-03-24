@@ -29,7 +29,7 @@ def user_insert(db):
     dec = input("Current month and year [y/n]: ")
     if dec == "y": 
         year = str(he.year_now())
-        month = conv.convert_month_to_int(str(he.month_now()))
+        month = str(conv.convert_month_to_int(str(he.month_now())))
     else:
         year = input("Year: ")
         month = input("Month: ")
@@ -47,17 +47,15 @@ def user_insert(db):
     
     cons_day = he.get_day_in_year(date)
     
-    while re.checker.check_doc_exist(db, col, cons_day):
+    if re.checker.check_doc_exist(db, col, cons_day):
         dec = input("Day already exists. Change day [y/n]: ")
-        
+    
         doc = re.find_session(col, cons_day)
-        printer.print_sessions(doc)
-        
+        printer.print_session(doc)
+    
         if dec == "y": 
             user_insert(db)
-        else:
-            print("Closing Eisenrecorder.")
-            exit()
+        
                 
    
     workout_type = input("workout type: ")

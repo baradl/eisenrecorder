@@ -81,6 +81,25 @@ def get_day_in_year(date):
     return consecutive_days + day       
 
 ###############################################################################
+    
+def get_week(date):
+    [day, month, year] = converter.convert_date(date)
+    
+    month = converter.convert_to_month(month)
+    month = month[:3]
+    
+    date_ = datetime.strptime(str(month) + " " + str(day) + " " + str(year), 
+                                "%b %d %Y")
+    
+    weekday = date_.weekday()
+    
+    start = get_day_in_year(date) - weekday
+    end = get_day_in_year(date) + (7 - weekday)
+    
+    return [start, end]
+
+
+###############################################################################
 
 """
 For a given month the number of days in it is returned.
