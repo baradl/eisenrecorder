@@ -105,6 +105,9 @@ def user_menu(db):
     print(he.indent())
     if input_ == "1":
         print("Inserting one session.")
+        print("'name sets reps weight' or 'name reps weight'")
+        see_abb = input("See abbreviation [y/n]: ")
+        if see_abb == "y": he.abbreviation()
         ui.user_insert(db)
     
     elif input_ == "2":

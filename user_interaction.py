@@ -26,13 +26,15 @@ def user_insert(db):
     print(he.indent())
     
     
-    dec = input("Current year [y/n]: ")
-    if dec == "y": year = "2019"
+    dec = input("Current month and year [y/n]: ")
+    if dec == "y": 
+        year = str(he.year_now())
+        month = conv.convert_month_to_int(str(he.month_now()))
     else:
         year = input("Year: ")
+        month = input("Month: ")
+        month = str(conv.convert_month_to_int(month))
         
-    month = input("Month: ")
-    month = str(conv.convert_month_to_int(month))
     
     day = input("Day: ")
     day = check.check_day(day)
@@ -61,9 +63,6 @@ def user_insert(db):
     workout_type = input("workout type: ")
     exercises = []
     if workout_type != "off" and workout_type != "run":
-        print("'name sets reps weight' or 'name reps weight'")
-        see_abb = input("See abbreviation? ")
-        if see_abb == "yes": he.abbreviation()
         while True:
             exercise = input("Exercise: ")
             if len(exercise) < 4: break
