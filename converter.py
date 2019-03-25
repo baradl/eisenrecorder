@@ -202,9 +202,17 @@ Converts string corresponding to a date into a list of [day,month,year]
     
 def convert_date(string):
     date = he.string_to_list(string, sep = ".")
+    
     day = date[0]
     month = date[1]
-    year = date[2]
+    
+    if len(date) == 3:
+        year = date[2]
+        if len(str(year)) == 2: 
+            year = "20" + str(year)
+            year = int(year)
+    else: year = str(he.year_now())
+    
     return [day, month, year] 
 
 ###############################################################################

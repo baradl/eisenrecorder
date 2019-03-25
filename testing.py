@@ -14,7 +14,7 @@ def create(db = "TrainingLogData", col = "empty"):
     client = connect.connect_to_client()
     db = client[db]
     if col != "empty":
-        col = db [col]
+        col = db ["AllSessions"]
         return db,col
     return db
     
@@ -25,5 +25,6 @@ def find(col, day):
     return request.find_session(col,day)
 
 
-db = create()
+db, col = create(col = "")
+x = find(col, 77)
     

@@ -10,6 +10,7 @@ import request as re
 import cache
 import printer
 import filter
+from datetime import datetime
 
 
 ###############################################################################
@@ -32,7 +33,6 @@ def user_start():
         if con.check_internet():
             print("Connecting to online host.")
             print(he.indent())
-            print("\n")
             client = con.connect_to_client()
             db = client["TrainingLogData"]
             user_menu(db)
@@ -161,7 +161,15 @@ Menu to let the user input the sessions one wants to print.
 def menu_see(db, decision):
     
     if decision == "week":
-        date = input("Date in week of interest: ")
+        dec = input("Current week[y/n]: ")
+        if dec == "y": 
+            day = str(datetime.now().day)
+            month = str(he.month_now())
+            year = str(he.year_now())
+            
+            date = day + "." + month + "." + year
+        else:
+            date = input("Date in week of interest: ")
         
         [start, end] = he.get_week(date)
         
