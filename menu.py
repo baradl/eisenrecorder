@@ -366,7 +366,7 @@ def backup_menu():
 def prep_menu(db):
     import filter
     types = re.TYPES
-    print("1. Print Session type \n2. Analyse")
+    print("1. Print Session type \n2. Print Exercise \n3. Analyse")
     decision = input("Choose number or press enter for exit: ")
     
     if decision == "1":
@@ -380,6 +380,15 @@ def prep_menu(db):
         printer.print_filter(session_list)
     
     elif decision == "2":
+        exercise = input("Exercise to be listed: ")
+        exercise_list, days = filter.filter_exercise(db, exercise)
+        
+        for i in range(len(days)):
+            printer.print_exercise(exercise_list[i], 
+                                   conv.convert_int_todate(days[i]))
+    
+        
+    elif decision == "3":
         print("Not yet implemented.")
     
     else:

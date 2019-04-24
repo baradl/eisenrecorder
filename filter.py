@@ -49,6 +49,25 @@ def filter_days(db, day_list):
             filtered.append(doc)
             
     return filtered
+
+
+def filter_exercise(db, exercise):
+    col = db["AllSessions"]
+    cursor = col.find().sort("day")
+    filtered = []
+    days = []
+    
+    for doc in cursor:
+        if doc["type"] != "off" and doc["type"] != "run":
+            if exercise in doc["exercise list"]:
+                exercise_as_list, day = he.get_exercise(doc, exercise)
+                days.append(day)
+                filtered.append(exercise_as_list)
+            
+    return filtered, days
+            
+            
+    
     
     
     

@@ -18,13 +18,11 @@ def create(db = "TrainingLogData", col = "empty"):
         return db,col
     return db
     
-    
-
 
 def find(col, day):
     return request.find_session(col,day)
 
 
 db, col = create(col = "")
-x = find(col, 77)
+x = find(col, 105)
     

@@ -44,8 +44,10 @@ def print_session(doc):
 
 ###############################################################################
     
-def print_exercise(exercise):
-    name     = exercise[0]
+def print_exercise(exercise, date = False):
+    
+    if not date: name = exercise[0]
+    else: name = date
     #Type 1 exercise
     if len(exercise) == 4:
         sets     = exercise[1]

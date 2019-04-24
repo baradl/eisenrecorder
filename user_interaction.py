@@ -89,7 +89,7 @@ def user_insert(db):
     else: user_insert(db)
     
     decision = input("Insert another session [y/n]: ")
-    if decision != "n": user_insert(db)
+    if decision == "y": user_insert(db)
     
 
 

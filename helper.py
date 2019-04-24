@@ -230,6 +230,19 @@ def swap(x1,x2):
     x2 = xh
     return [x1,x2]      
 
+
+###############################################################################
+
+def get_exercise(doc, exercise):
+    assert doc["type"] is not "run"
+    assert doc["type"] is not "off"
+    
+    assert exercise in doc["exercise list"]
+    
+    for i in range(doc["amount of exercises"]):
+        ex = doc["exercise" + str(i+1)]
+        if ex[0] == exercise: return ex, doc["day"]
+        
 ###############################################################################
 
 """
