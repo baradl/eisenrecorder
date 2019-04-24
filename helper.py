@@ -64,7 +64,7 @@ def get_day_in_year(date):
     assert year >= 2019
     assert month <= 12
     days = monthly_days(year)
-    assert day < days[month-1]
+    assert day <= days[month-1]
     
     
     consecutive_days = 0

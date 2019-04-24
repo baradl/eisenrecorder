@@ -26,7 +26,7 @@ def user_start():
         if decision == "y":
             cache.upload_cache()
     print(he.indent())
-    print("1. Edit Sessions \n2. Edit Cache \n3. Backup")
+    print("1. Edit Sessions \n2. Edit Cache \n3. Backup \n4. Session Prep")
     dec1 = input("\nChoose number or press enter for exit: ")
     
     if dec1 == "1":
@@ -44,6 +44,18 @@ def user_start():
         menu_cache()
     elif dec1 == "3":
         backup_menu()
+    elif dec1 == "4":
+        if con.check_internet():
+            print("Connecting to online host.")
+            print(he.indent())
+            client = con.connect_to_client()
+            db = client["TrainingLogData"]
+            prep_menu(db)
+        else:
+            print("No network service. Going back to main menu")
+            user_start()
+        
+        
     
         
     else:
@@ -347,7 +359,33 @@ def backup_menu():
     else:
         print("Closing.")    
                 
+
+###############################################################################
         
+        
+def prep_menu(db):
+    import filter
+    types = re.TYPES
+    print("1. Print Session type \n2. Analyse")
+    decision = input("Choose number or press enter for exit: ")
+    
+    if decision == "1":
+        while(True):
+            type_ = input("Type: ")
+            if type_ in types: break
+            else: print("Selected type does not exist.")
+        
+        session_list = filter.filter_type(db, type_)
+        
+        printer.print_filter(session_list)
+    
+    elif decision == "2":
+        print("Not yet implemented.")
+    
+    else:
+        print("Closing.")
+    
+    
 # =============================================================================
 # ###############################################################################        
 #             

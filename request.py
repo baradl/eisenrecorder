@@ -59,6 +59,16 @@ def find_session(col, day):
     for document in cursor:
         if document["day"] == day:
             return document
+
+###############################################################################
+
+"""
+Returns session of a given date.
+"""
+def find_session_by_date(col, date):
+    consday = he.get_day_in_year(date)
+    return find_session(col, consday)
+    
         
 ###############################################################################
 
