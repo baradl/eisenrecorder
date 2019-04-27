@@ -2,7 +2,8 @@
 Collection of helper functions.
 """
 
-from datetime import datetime
+import datetime
+from datetime import timedelta
 from tabulate import tabulate
 import converter
 import check
@@ -15,11 +16,14 @@ import os, glob
 """
 Returns current month/year.
 """
+def day_now():
+    return datetime.datetime.now().day
+
 def month_now():
-    return datetime.now().month
+    return datetime.datetime.now().month
 
 def year_now():
-    return datetime.now().year
+    return datetime.datetime.now().year
 
 ###############################################################################
 
@@ -85,18 +89,42 @@ def get_day_in_year(date):
 def get_week(date):
     [day, month, year] = converter.convert_date(date)
     
+    if month == 1 and day<=6: return [0,6]
+    
     month = converter.convert_to_month(month)
     month = month[:3]
     
+    
     date_ = datetime.strptime(str(month) + " " + str(day) + " " + str(year), 
                                 "%b %d %Y")
+    
     
     weekday = date_.weekday()
     
     start = get_day_in_year(date) - weekday
     end = get_day_in_year(date) + (7 - weekday)
     
+    
     return [start, end]
+
+
+###############################################################################
+    
+
+def start_end_week(year, calendar_week):
+    
+    assert year >= 2019       
+    if calendar_week == 0: return 0,6
+    
+    monday = datetime.datetime.strptime(f'{year}-{calendar_week}-1', "%Y-%W-%w").date()
+    sunday = monday + datetime.timedelta(days=6.9)
+    
+    start = str(monday.day) + "." + str(monday.month) + "." + str(monday.year)
+    end   = str(sunday.day) + "." + str(sunday.month) + "." + str(sunday.year)
+    
+    start = get_day_in_year(start)
+    end = get_day_in_year(end)
+    return start, end
 
 
 ###############################################################################

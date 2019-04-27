@@ -366,7 +366,7 @@ def backup_menu():
 def prep_menu(db):
     import filter
     types = re.TYPES
-    print("1. Print Session type \n2. Print Exercise \n3. Analyse")
+    print("1. Print Session type \n2. Print Exercise \n3. Other")
     decision = input("Choose number or press enter for exit: ")
     
     if decision == "1":
