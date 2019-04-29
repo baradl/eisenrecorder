@@ -26,7 +26,7 @@ def user_start():
         if decision == "y":
             cache.upload_cache()
     print(he.indent())
-    print("1. Edit Sessions \n2. Edit Cache \n3. Backup \n4. Session Prep")
+    print("1. Edit Sessions \n2. Edit Cache \n3. Backup \n4. Session Prep \n5. Run Menu")
     dec1 = input("\nChoose number or press enter for exit: ")
     
     if dec1 == "1":
@@ -52,6 +52,16 @@ def user_start():
             db = client["TrainingLogData"]
             prep_menu(db)
         else:
+            print("No network service. Going back to main menu")
+            user_start()
+    elif dec1 == "5":
+       if con.check_internet():
+            print("Connecting to online host.")
+            print(he.indent())
+            client = con.connect_to_client()
+            db = client["TrainingLogData"]
+            run_menu(db)
+       else:
             print("No network service. Going back to main menu")
             user_start()
         
@@ -366,7 +376,7 @@ def backup_menu():
 def prep_menu(db):
     import filter
     types = re.TYPES
-    print("1. Print Session type \n2. Print Exercise \n3. Other")
+    print("1. Print Session type \n2. Print Exercise \n3. Run Summary \n4. Other \n")
     decision = input("Choose number or press enter for exit: ")
     
     if decision == "1":
@@ -387,13 +397,40 @@ def prep_menu(db):
             printer.print_exercise(exercise_list[i], 
                                    conv.convert_int_todate(days[i]))
     
-        
     elif decision == "3":
-        print("Not yet implemented.")
+        print("Not yet implemented")
     
     else:
         print("Closing.")
     
+
+###############################################################################
+        
+def run_menu(db):
+    print("1. Insert Run \n2. Summary \n")
+    decision = input("Choose number or press enter for exit: ")
+    
+    if decision == "1":
+        ui.insert_run(db)
+    elif decision == "2":
+        import summary
+        print(he.indent())
+        summary.summary_run(db)
+        print(he.indent())
+        dec = input("See specific week: ")
+        
+        try: 
+            dec = int(dec)
+            runs = summary.weekly_runs(db, dec + summary.START + 1)
+        
+            printer.print_filter(runs)
+        
+        except: 
+            print("Closing")
+
+        
+    else: print("Closing")
+        
     
 # =============================================================================
 # ###############################################################################        

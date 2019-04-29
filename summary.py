@@ -6,7 +6,7 @@ import converter as conv
 
 START = datetime.date(2019, 3, 1).isocalendar()[1] - 1
 
-def summary_run(db, output = True):
+def summary_run(db, ret = False):
     global START
     current_week = datetime.date(he.year_now(),
                                  he.month_now(), he.day_now()).isocalendar()[1]
@@ -17,6 +17,7 @@ def summary_run(db, output = True):
     
     for week in range(START, current_week):
         runs = weekly_runs(db,week)
+        #if runs == []: continue
         summary_float = summary_week(runs)
         time = conv.convert_float_totime(summary_float[1])
         pace = conv.convert_float_totime(summary_float[2])
@@ -26,6 +27,7 @@ def summary_run(db, output = True):
     
     out = tabulate(content, headers)
     print(out)
+    if ret: return out
         
     
 
