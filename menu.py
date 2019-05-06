@@ -421,15 +421,20 @@ def run_menu(db):
         
         try: 
             dec = int(dec)
-            runs = summary.weekly_runs(db, dec + summary.START + 1)
+            runs = summary.weekly_runs(db, dec + summary.START -1)
         
             printer.print_filter(runs)
+            dec = input("Back to run menu [y/n]: ")
+            if dec == "y": run_menu(db)
         
         except: 
             print("Closing")
 
         
-    else: print("Closing")
+    else: 
+        dec = input("Back to run menu [y/n]: ")
+        if dec == "y": run_menu(db)
+        print("Closing")
         
     
 # =============================================================================

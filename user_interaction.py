@@ -157,8 +157,8 @@ def insert_run(db):
     if decision == "y": re.insert_session(col, dic)
     else: user_insert(db)
     
-    decision = input("Insert another session [y/n]: ")
-    if decision == "y": user_insert(db)
+    decision = input("Insert another run [y/n]: ")
+    if decision == "y": insert_run(db)
 
 # =============================================================================
 # """
