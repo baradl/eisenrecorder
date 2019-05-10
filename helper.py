@@ -25,6 +25,13 @@ def month_now():
 def year_now():
     return datetime.datetime.now().year
 
+def today():
+    day = day_now()
+    month = month_now()
+    year = year_now()
+    tod = str(day) + "." + str(month) + "." + str(year)
+    return tod
+
 ###############################################################################
 
 """

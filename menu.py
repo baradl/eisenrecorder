@@ -376,7 +376,7 @@ def backup_menu():
 def prep_menu(db):
     import filter
     types = re.TYPES
-    print("1. Print Session type \n2. Print Exercise \n3. Run Summary \n4. Other \n")
+    print("1. Print Session type \n2. Print Exercise \n3. Off Summary \n4. Other \n")
     decision = input("Choose number or press enter for exit: ")
     
     if decision == "1":
@@ -398,7 +398,8 @@ def prep_menu(db):
                                    conv.convert_int_todate(days[i]))
     
     elif decision == "3":
-        print("Not yet implemented")
+        import summary
+        summary.summary_off(db)
     
     else:
         print("Closing.")
