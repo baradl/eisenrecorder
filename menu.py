@@ -5,12 +5,10 @@ Collection of menus used within the UI.
 import helper as he
 from helper import converter as conv
 import connect as con
-import user_interaction as ui
 import request as re
 import cache
 import printer
-import filter
-from datetime import datetime
+import submenu
 
 
 ###############################################################################
@@ -26,44 +24,34 @@ def user_start():
         if decision == "y":
             cache.upload_cache()
     print(he.indent())
-    print("1. Edit Sessions \n2. Edit Cache \n3. Backup \n4. Session Prep \n5. Run Menu")
+    print("1. Strenght \n2. Run \n3. Off \n4. Cache \n5. Backup")
     dec1 = input("\nChoose number or press enter for exit: ")
+    options = ["strength", "run", "off"]
+    try:
+        dec1 = int(dec1)
+    except: 
+        print("Closing")
+        quit()
     
-    if dec1 == "1":
+    
+    
+    
+    if dec1 in [1,2,3]:
         if con.check_internet():
             print("Connecting to online host.")
             print(he.indent())
             client = con.connect_to_client()
             db = client["TrainingLogData"]
-            user_menu(db)
+            print("Choose", options[dec1-1])
+            session_menu(db, options[dec1-1])
         else:
             print("No network service. Going back to main menu")
-            user_start()
-    
-    elif dec1 == "2": 
+            user_start()        
+    elif dec1 == 4:
         menu_cache()
-    elif dec1 == "3":
+    elif dec1 == 5:
         backup_menu()
-    elif dec1 == "4":
-        if con.check_internet():
-            print("Connecting to online host.")
-            print(he.indent())
-            client = con.connect_to_client()
-            db = client["TrainingLogData"]
-            prep_menu(db)
-        else:
-            print("No network service. Going back to main menu")
-            user_start()
-    elif dec1 == "5":
-       if con.check_internet():
-            print("Connecting to online host.")
-            print(he.indent())
-            client = con.connect_to_client()
-            db = client["TrainingLogData"]
-            run_menu(db)
-       else:
-            print("No network service. Going back to main menu")
-            user_start()
+       
         
         
     
@@ -74,242 +62,193 @@ def user_start():
 
 ###############################################################################
 
-    
-# =============================================================================
-# """
-# User can choose between different databases to reference.
-# """
-# 
-# 
-# def user_choose_database(myclient):        
-#     print("List of databases:")
-#     print(myclient.list_database_names())
-#     print("\n")
-#     print("List of collections in TrainingLogData:")
-#     print(myclient["TrainingLogData"].list_collection_names())
-#     print("\n")
-#     x = input("Standard mode or test mode: ")
-#     
-#     if x == "test":
-#         x = input("Database to be referenced: ")
-#         db = myclient[x]
-#         print("Collections: ", db.list_collection_names())
-#         print(he.indent())
-#         #user_menu(db)
-#     else:
-#         print("Currently working on:",end = " ")
-#         current_month = conv.convert_to_month(he.month_now())
-#         current_year = str(he.year_now())
-#         print(current_month + current_year)
-#         db = myclient["TrainingLogData"]
-#         print(he.indent())
-#         #user_menu(db)
-# 
-#     user_menu(db)
-# =============================================================================
 
 
-
-###############################################################################
-
-
-"""
-When interacting with sessions the user can insert, edit and delete sessions. 
-In addition one can print a single sessions, a month/year of sessions or all 
-sessions.
-"""
-
-def user_menu(db):
-    col = db["AllSessions"]
-    print("1. Insert a session \n2. Delete a session \n3. Edit a session \n4. See single session \n5. See week/month/year/all")
+def session_menu(db, type_):
+    print("1. Insert, change, delete a session \n2. Read session/week/month/year/all \n3. Analyze")    
     input_ = input("\nChoose number or press enter for exit: ")
     
     print(he.indent())
+    
+    options = ["strength", "run", "off"]
+    assert type_.lower() in options
+    
     if input_ == "1":
-        print("Inserting one session.")
-        print("'name sets reps weight' or 'name reps weight'")
-        see_abb = input("See abbreviation [y/n]: ")
-        if see_abb == "y": he.abbreviation()
-        ui.user_insert(db)
-    
+        decision = submenu.cud_actions()
+        if decision == "1":
+            submenu.insert(db, type_)
+        elif decision == "2":
+            submenu.edit(db, db["AllSessions"])
+        elif decision == "3":
+            date = input("Date to delete (dd.mm.yy): ")
+            cons_day = he.get_day_in_year(date)
+            
+            col = db["AllSessions"]
+            session = re.find_session(col, cons_day)
+            re.printer.print_session(session)
+            dec = input("Delete this session [y/n]: ")
+            if dec == "y": re.delete_session(col, cons_day)
+            
     elif input_ == "2":
-        date = input("Date to delete (dd.mm.yy): ")
-        cons_day = he.get_day_in_year(date)
+        submenu.read(db, submenu.read_decision())
         
-        session = re.find_session(col, cons_day)
-        re.printer.print_session(session)
-        dec = input("Delete this session [y/n]: ")
-        if dec == "y": re.delete_session(col, cons_day)
-    
     elif input_ == "3":
-        date = input("Date to edit (dd.mm.yy): ")
-        cons_day = he.get_day_in_year(date)
+        if options.index(type_) == 0:
+            prep_menu(db)
+        elif options.index(type_) == 1:
+            import analyse_run as ar
+            print(he.indent())
+            ar.summary_run(db)
+            print(he.indent())
+            dec = input("See specific week: ")
+            
+            try: 
+                dec = int(dec)
+                runs = ar.weekly_runs(db, dec + ar.START -1)
+            
+                printer.print_filter(runs)
+                dec = input("Back to run menu [y/n]: ")
+                if dec == "y": session_menu(db, type_)
+            
+            except: 
+                print("Closing")
+        elif options.index(type_) == 2:
+            import analyse_off as ao
+            ao.summary_off(db)
         
-        session = re.find_session(col, cons_day)
-        re.printer.print_session(session)
-        dec = input("Edit this this session [y/n]: ")
-        if dec == "y": user_menu_edit(session, col)
-        else: 
-            print("No valid input. Going back to menu.")
-            user_menu(db)
+    else:
+        print("Closing")
+        
+        
+
+# =============================================================================
+# def strength_menu(db):
+#     print("1. Insert, change, delete a session \n2. Read session/week/month/year/all \n3. Analyze")    
+#     input_ = input("\nChoose number or press enter for exit: ")
+#     
+#     print(he.indent())
+#     
+#     if input_ == "1":
+#         decision = submenu.cud_actions()
+#         if decision == "1":
+#             submenu.insert(db, "strength")
+#         elif decision == "2":
+#             submenu.edit(db, db["AllSessions"])
+#         elif decision == "3":
+#             date = input("Date to delete (dd.mm.yy): ")
+#             cons_day = he.get_day_in_year(date)
+#             
+#             col = db["AllSessions"]
+#             session = re.find_session(col, cons_day)
+#             re.printer.print_session(session)
+#             dec = input("Delete this session [y/n]: ")
+#             if dec == "y": re.delete_session(col, cons_day)
+#             
+#     elif input_ == "2":
+#         submenu.read(db, submenu.read_decision())
+#         
+#     elif input_ == "3":
+#         prep_menu(db)
+#     else:
+#         print("Closing")
+#         
+#             
+# def run_menu(db):
+#     print("1. Insert, change, delete a run \n2. Read session/week/month/year/all \n3. Analyze")    
+#     input_ = input("\nChoose number or press enter for exit: ")
+#     
+#     print(he.indent())
+#     
+#     if input_ == "1":
+#         decision = submenu.cud_actions()
+#         if decision == "1":
+#             submenu.insert(db, "run")
+#         elif decision == "2":
+#             submenu.edit(db, db["AllSessions"])
+#         elif decision == "3":
+#             date = input("Date to delete (dd.mm.yy): ")
+#             cons_day = he.get_day_in_year(date)
+#             
+#             col = db["AllSessions"]
+#             session = re.find_session(col, cons_day)
+#             re.printer.print_session(session)
+#             dec = input("Delete this run [y/n]: ")
+#             if dec == "y": re.delete_session(col, cons_day)
+#             
+#     elif input_ == "2":
+#         submenu.read(db, submenu.read_decision())
+#     elif input_ == "3":
+#         import analyse_run as ar
+#         print(he.indent())
+#         ar.summary_run(db)
+#         print(he.indent())
+#         dec = input("See specific week: ")
+#         
+#         try: 
+#             dec = int(dec)
+#             runs = ar.weekly_runs(db, dec + ar.START -1)
+#         
+#             printer.print_filter(runs)
+#             dec = input("Back to run menu [y/n]: ")
+#             if dec == "y": run_menu(db)
+#         
+#         except: 
+#             print("Closing")
+# 
+#         
+#     else: 
+#         dec = input("Back to run menu [y/n]: ")
+#         if dec == "y": run_menu(db)
+#         print("Closing")
+#         
+# 
+# def off_menu(db):
+#     print("1. Insert, change, delete a off day \n2. Read session/week/month/year/all \n3. Analyze")    
+#     input_ = input("\nChoose number or press enter for exit: ")
+#     
+#     print(he.indent())
+#     
+#     if input_ == "1":
+#         decision = submenu.cud_actions()
+#         if decision == "1":
+#             submenu.insert(db, "off")
+#         elif decision == "2":
+#             submenu.edit(db, db["AllSessions"])
+#         elif decision == "3":
+#             date = input("Date to delete (dd.mm.yy): ")
+#             cons_day = he.get_day_in_year(date)
+#             
+#             col = db["AllSessions"]
+#             session = re.find_session(col, cons_day)
+#             re.printer.print_session(session)
+#             dec = input("Delete this off day [y/n]: ")
+#             if dec == "y": re.delete_session(col, cons_day)
+#             
+#     elif input_ == "2":
+#         submenu.read(db, submenu.read_decision())
+#     elif input_ == "3":
+#         import analyse_off as ao
+#         ao.summary_off(db)
+# 
+#         
+#     else: 
+#         dec = input("Back to run menu [y/n]: ")
+#         if dec == "y": run_menu(db)
+#         print("Closing")
+# =============================================================================
+                
+        
     
-    elif input_ == "4":
-        date = input("Date of session (dd.mm.yy): ")
-        cons_day = he.get_day_in_year(date)
-        
-        session = re.find_session(col, cons_day)
-        re.printer.print_session(session)
-        
-    elif input_ == "5":
-        decision = input("What do you want to see [week/month/year/all]: ")
-        
-        menu_see(db,decision)
-        
-    else: 
-        dec = input("Wrong number [y/n]: ")
-        if dec == "y": user_menu(db)          
-    
-    print(he.indent())
-    dec = input("Back to database menu [y/n]: ")
-    if dec == "y": user_menu(db)
+###############################################################################
+
+
+
     
  
 ###############################################################################
     
-"""
-Menu to let the user input the sessions one wants to print.
-""" 
-    
-def menu_see(db, decision):
-    
-    if decision == "week":
-        dec = input("Current week[y/n]: ")
-        if dec == "y": 
-            day = str(datetime.now().day)
-            month = str(he.month_now())
-            year = str(he.year_now())
-            
-            date = day + "." + month + "." + year
-        else:
-            date = input("Date in week of interest: ")
-        
-        [start, end] = he.get_week(date)
-        
-        doc_list = filter.filter_consecutive_days(db, start, end)
-        
-        printer.print_filter(doc_list)
-    
-    elif decision == "month":
-        date = input("mm.yyyy: ")
-        [month, year] = date.split(".")
-        
-        if len(year) == 2: year = "20" + year
-        
-        month = conv.convert_month_to_int(month)
-        
-        monthly_days = he.monthly_days(int(year))
-        
-        days = [sum(monthly_days[:month-1])+1,sum(monthly_days[:month])]
-        
-        printer.print_allsessions(db, days)
-    
-    elif decision == "year":
-        year = input("Which year would you like to see: ")
-        
-        year = int(year)
-        days_in_year = 365
-        
-        if he.leap(year): days_in_year += 1
-        
-        consecutive_days = 0
-        while year > 2019:
-            consecutive_days += 365
-            if he.leap(year): consecutive_days += 1
-        
-            year -= 1
-        
-        printer.print_allsessions(db, [consecutive_days + 1, consecutive_days 
-                                       + days_in_year])
-        
-        
-    elif decision == "all":
-        printer.print_allsessions(db)
-        
-    else:
-        print("No valid input. Closing.")
-        
         
     
-    
-###############################################################################
-
-"""
-If a session shall be edited the user is guided via this menu. 
-"""
-
-def user_menu_edit(session, col):
-    print(he.indent())
-    print("1. Change day \n2. Change workout type \n3. Change/Add exercises \n4. Delete exercises \n5. Add/Change comment")
-    dec = input("\nWhat shall be editted: ")
-    
-    print(he.indent())
-    if dec == "1":
-        newdate = input("New date (dd.mm.yy): ")
-        newday = he.get_day_in_year(newdate)
-        re.updater.update_day(session, newday, col)
-    elif dec == "2":
-        oldtype = session["type"]
-        newtype = input("New type: ")
-        re.updater.update_type(session, newtype, col)
-        if oldtype == "off":
-            print("Insert the new exercises.")
-            if newtype == "run":
-                stats = input("Distance in km and time in minutes (dis time): ")
-                run = conv.convert_run(stats)
-                session.update({"run": run})
-            else:
-                print("Exercises either as 'name sets reps weight' or 'name reps weight'. In the latter seperate reps and weight by comma. Type 'no' if no more exercises shall be implemented.")
-                exercises = []
-                while True:
-                    exercise = input("Exercise: ")
-                    if len(exercise) < 4: break
-                    exercise = he.convert_input(exercise)
-                    exercises.append(exercise)
-                for i in range(len(exercises)):
-                    session.update({"exercise"+str(i+1): exercises[i]})
-                exlist = []
-                for j in range(len(exercises)):
-                    exercise = exercises[j]
-                    exlist.append(exercise[0])
-                session.update({"exercise list": exlist})
-        col.save(session)
-    elif dec == "3":
-        while True:
-            new_ex = input("New exercise: ")
-            if len(new_ex) < 4: break
-            new_ex = conv.convert_input(new_ex)
-            print(new_ex)
-            re.updater.update_exercise(session, new_ex, col)
-        
-            
-        
-    elif dec == "4":
-        ex = input("List exercises to be deleted: ")
-        ex_list = ex.split()
-        re.updater.delete_exercise(session, ex_list, col)
-        
-    elif dec == "5":
-        newcomment = input("New comment: ")
-        re.updater.update_comments(session, newcomment, col)
-        
-    else:
-        dec = input("No valid input. Back to menu? ")
-        if dec == "yes": user_menu_edit()
-        else: raise SystemExit
-    
-    re.printer.print_session(session)
-    dec = input("Back to database menu [y/n]: ")
-    if dec == "y": user_menu(col.database)
         
             
  
@@ -376,7 +315,7 @@ def backup_menu():
 def prep_menu(db):
     import filter
     types = re.TYPES
-    print("1. Print Session type \n2. Print Exercise \n3. Off Summary \n4. Other \n")
+    print("1. Print Session type \n2. Print Exercise \n")
     decision = input("Choose number or press enter for exit: ")
     
     if decision == "1":
@@ -397,92 +336,7 @@ def prep_menu(db):
             printer.print_exercise(exercise_list[i], 
                                    conv.convert_int_todate(days[i]))
     
-    elif decision == "3":
-        import summary
-        summary.summary_off(db)
-    
     else:
         print("Closing.")
     
-
 ###############################################################################
-        
-def run_menu(db):
-    print("1. Insert Run \n2. Summary \n")
-    decision = input("Choose number or press enter for exit: ")
-    
-    if decision == "1":
-        ui.insert_run(db)
-    elif decision == "2":
-        import summary
-        print(he.indent())
-        summary.summary_run(db)
-        print(he.indent())
-        dec = input("See specific week: ")
-        
-        try: 
-            dec = int(dec)
-            runs = summary.weekly_runs(db, dec + summary.START -1)
-        
-            printer.print_filter(runs)
-            dec = input("Back to run menu [y/n]: ")
-            if dec == "y": run_menu(db)
-        
-        except: 
-            print("Closing")
-
-        
-    else: 
-        dec = input("Back to run menu [y/n]: ")
-        if dec == "y": run_menu(db)
-        print("Closing")
-        
-    
-# =============================================================================
-# ###############################################################################        
-#             
-# def user_menu_start():
-#     print("Eisenrecorder started.")
-#     print("1. Connection \n2. Syncronization")
-#     dec1 = input("Choose number or press enter for exit.\n")
-#     
-#     if dec1 == "1" or dec1 == "2": 
-#         print(he.indent())
-#         return dec1
-#         
-#     else:
-#         print("Exit.")
-#         raise SystemExit
-# 
-# 
-# 
-# ###############################################################################   
-#     
-#     
-#         
-#         
-# 
-# def user_syncro_menu():
-#     print("1. Upload \n2. Download")
-#     dec3 = input("Upload or Download: ")
-#     
-#     if dec3 == "1": direction = "up"
-#     elif dec3 == "2": direction = "down"
-#     else: 
-#         print("No valid input. Shutting down.")
-#         raise SystemExit
-#     print("1. Whole client \n2. Database \n3. Collection")
-#     level = input("Syncronize which level: ")
-#     
-#     if level == "1": level = "clients"
-#     elif level == "2": level = "db"
-#     elif level == "3": level = "col"
-#     else: 
-#         print("No valid input. Shutting down.")
-#         raise SystemExit
-#     return [direction, level]
-#  
-#    
-#     
-# =============================================================================
-    

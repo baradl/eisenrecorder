@@ -1,8 +1,9 @@
 import datetime
-import helper as he
-import filter
 from tabulate import tabulate
+import helper as he
 import converter as conv
+import filter
+
 
 START = datetime.date(2019, 3, 1).isocalendar()[1] - 1
 
@@ -11,7 +12,7 @@ def summary_run(db, ret = False):
     current_week = datetime.date(he.year_now(),
                                  he.month_now(), he.day_now()).isocalendar()[1]
     
-    headers = ["Week", "Distance", "Time", "Pace"]
+    headers = ["Week", "Number", "Distance", "Time", "Pace", "Fastest Run"]
     
     content = []
     
@@ -19,9 +20,21 @@ def summary_run(db, ret = False):
         runs = weekly_runs(db,week)
         #if runs == []: continue
         summary_float = summary_week(runs)
+        
         time = conv.convert_float_totime(summary_float[1])
         pace = conv.convert_float_totime(summary_float[2])
-        summary_string = [str(week-START+1), str(summary_float[0]) , time, pace]
+        
+        fastest = fastest_run(runs)
+        if fastest == None:
+            out_fastest = "-"
+        else:
+            fastest_stats = fastest["run"]
+            pace_fastest = conv.convert_float_totime(fastest_stats[2])
+            dist_fastest = fastest_stats[0]
+            out_fastest = str(dist_fastest)+ "   @ " + pace_fastest
+        
+        summary_string = [str(week-START+1), str(len(runs)) ,str(summary_float[0]),
+                          time, pace, out_fastest]
         content.append(summary_string)
         
     
@@ -43,6 +56,16 @@ def weekly_runs(db, week, year = datetime.datetime.now().year):
     return runs
 
 
+def fastest_run(runs):
+    if runs == []:
+        return None
+    paces = []
+    for run in runs:
+        stats = run["run"]
+        paces.append(stats[2])
+    return runs[paces.index(min(paces))]
+    
+
 def summary_week(runs):
     if runs == []: return 0,0,0
     total_distance = 0
@@ -56,52 +79,3 @@ def summary_week(runs):
     pace = total_time/total_distance
     
     return total_distance, total_time, pace
-
-def summary_off(db):
-    
-    off_days = filter.filter_type(db, "off")
-    
-    print(he.indent())
-    print("Number off days:", len(off_days))
-    today = he.today()
-    print("Total days:", he.get_day_in_year(today))
-    last_off = off_days[-1]
-    print("Last off day:", conv.convert_int_todate(last_off["day"]))
-    print(he.indent())
-    
-    content = []
-    year = he.year_now()
-    for month in range(1,he.month_now()+1):
-        monthly_days = he.monthly_days(int(year))
-        days = [sum(monthly_days[:month-1])+1,sum(monthly_days[:month])]
-        
-        counter_month = 0
-        for session in off_days:
-            if session["day"] <= days[1] and session["day"] >= days[0]:
-                counter_month += 1
-        
-        content.append([conv.convert_to_month(month), str(counter_month)])
-        #print(conv.convert_to_month(month)+ ":" ,counter_month)
-    
-    header = ["Month", "Off days"]
-    out = tabulate(content, header)
-    print(out)
-    
-            
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
