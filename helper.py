@@ -102,7 +102,7 @@ def get_week(date):
     month = month[:3]
     
     
-    date_ = datetime.strptime(str(month) + " " + str(day) + " " + str(year), 
+    date_ = datetime.datetime.strptime(str(month) + " " + str(day) + " " + str(year), 
                                 "%b %d %Y")
     
     

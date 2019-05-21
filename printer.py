@@ -218,8 +218,10 @@ def print_allsessions_type(db, session_type):
             
             
 def print_filter(doc_list):
+    
     for doc in doc_list:
-        print_session(doc)
+        try: print_session(doc)
+        except: print(doc["day"], "could not be printed.")
 
 
 

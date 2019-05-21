@@ -67,7 +67,7 @@ def estimate_onerm(reps, weight):
     percentage = np.array([100, 96, 92, 89, 86, 84, 81, 79, 76, 74])
     percentage = 0.01*percentage
     estimate = weight/percentage[reps-1]
-    return estimate
+    return round(estimate, 2)
         
     
     

@@ -42,7 +42,7 @@ def user_start():
             print(he.indent())
             client = con.connect_to_client()
             db = client["TrainingLogData"]
-            print("Choose", options[dec1-1])
+            #print("Choose", options[dec1-1])
             session_menu(db, options[dec1-1])
         else:
             print("No network service. Going back to main menu.")
@@ -85,7 +85,8 @@ def session_menu(db, type_):
             if dec == "y": re.delete_session(col, cons_day)
             
     elif input_ == "2":
-        submenu.read(db, submenu.read_decision())
+        
+        submenu.read(db, submenu.read_decision(), type_.lower())
         
     elif input_ == "3":
         if options.index(type_) == 0:

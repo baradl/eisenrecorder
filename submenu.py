@@ -5,6 +5,7 @@ import request as re
 import converter as conv
 import printer
 from datetime import datetime
+import filter
 
 
 ###############################################################################
@@ -85,7 +86,7 @@ def edit(session, col):
 Menu to let the user input the sessions one wants to print.
 """ 
     
-def read(db, decision):
+def read(db, decision, type_):
     if decision == "single":
         date = input("Date of session (dd.mm.yy): ")
         cons_day = he.get_day_in_year(date)
@@ -106,7 +107,8 @@ def read(db, decision):
         
         [start, end] = he.get_week(date)
         
-        doc_list = filter.filter_consecutive_days(db, start, end)
+        
+        doc_list = filter.filter_consecutive_days(db, start, end, type_)
         
         printer.print_filter(doc_list)
     
@@ -164,7 +166,7 @@ def insert(db, type_):
         print("'name sets reps weight' or 'name reps weight'")
         see_abb = input("See abbreviation [y/n]: ")
         if see_abb == "y": he.abbreviation()
-        ui.insert_strenght(db)
+        ui.insert_strength(db)
     elif type_ == "run":
         ui.insert_run(db)
     elif type_ == "off":

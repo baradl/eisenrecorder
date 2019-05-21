@@ -12,7 +12,7 @@ def summary_run(db, ret = False):
     current_week = datetime.date(he.year_now(),
                                  he.month_now(), he.day_now()).isocalendar()[1]
     
-    headers = ["Week", "Number", "Distance", "Time", "Pace", "Fastest Run"]
+    headers = ["Week", "Number", "Distance", "Time", "Pace", "Fastest Run", "Longest Run"]
     
     content = []
     
@@ -33,8 +33,18 @@ def summary_run(db, ret = False):
             dist_fastest = fastest_stats[0]
             out_fastest = str(dist_fastest)+ "   @ " + pace_fastest
         
+        
+        longest = longest_run(runs)
+        if longest == None:
+            out_longest = "-"
+        else:
+            longest_stats = longest["run"]
+            pace_longest = conv.convert_float_totime(longest_stats[2])
+            dist_longest = longest_stats[0]
+            out_longest = str(dist_longest) + "   @ " + pace_longest
+            
         summary_string = [str(week-START+1), str(len(runs)) ,str(summary_float[0]),
-                          time, pace, out_fastest]
+                          time, pace, out_fastest, out_longest]
         content.append(summary_string)
         
     
@@ -48,11 +58,7 @@ def summary_run(db, ret = False):
 def weekly_runs(db, week, year = datetime.datetime.now().year):
     start, end = he.start_end_week(year, week)
     
-    weekly_sessions = filter.filter_consecutive_days(db, start, end)
-    runs = []
-    for doc in weekly_sessions:
-        if doc["type"] == "run": runs.append(doc)
-    
+    runs = filter.filter_consecutive_days(db, start, end, "run")    
     return runs
 
 
@@ -64,7 +70,15 @@ def fastest_run(runs):
         stats = run["run"]
         paces.append(stats[2])
     return runs[paces.index(min(paces))]
-    
+
+def longest_run(runs):
+    if runs == []: 
+        return None
+    dists = []
+    for run in runs:
+        stats = run["run"]
+        dists.append(stats[0])    
+    return runs[dists.index(max(dists))]
 
 def summary_week(runs):
     if runs == []: return 0,0,0

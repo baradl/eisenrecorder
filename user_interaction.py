@@ -48,10 +48,9 @@ def insert_strength(db):
     cons_day = he.get_day_in_year(date)
     
     if re.checker.check_doc_exist(db, col, cons_day):
-        dec = input("Day already exists. Change day [y/n]: ")
-    
         doc = re.find_session(col, cons_day)
         printer.print_session(doc)
+        dec = input("Day already exists. Change day [y/n]: ")
     
         if dec == "y": 
             insert_strength(db)
@@ -127,11 +126,10 @@ def insert_run(db):
     cons_day = he.get_day_in_year(date)
     
     if re.checker.check_doc_exist(db, col, cons_day):
-        dec = input("Day already exists. Change day [y/n]: ")
-    
         doc = re.find_session(col, cons_day)
         printer.print_session(doc)
-    
+        dec = input("Day already exists. Change day [y/n]: ")
+        
         if dec == "y": 
             insert_run(db)
         
@@ -191,11 +189,10 @@ def insert_off(db):
     cons_day = he.get_day_in_year(date)
     
     if re.checker.check_doc_exist(db, col, cons_day):
-        dec = input("Day already exists. Change day [y/n]: ")
-    
         doc = re.find_session(col, cons_day)
         printer.print_session(doc)
-    
+        dec = input("Day already exists. Change day [y/n]: ")
+
         if dec == "y": 
             insert_off(db)
         
