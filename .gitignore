@@ -1,4 +1,6 @@
 __pycache__/
+delete_pycache.py
 .ipynb_checkpoints/
 testing.py
+visual_analysis.ipynb
 change_entry_script.py

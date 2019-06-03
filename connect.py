@@ -1,7 +1,6 @@
 import pymongo as pm
 import requests
-import helper as he
-#import helper as he
+
 
 ###############################################################################
 

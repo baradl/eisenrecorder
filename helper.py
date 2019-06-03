@@ -180,18 +180,17 @@ def string_to_list(string, sep = ","):
 
 ###############################################################################
 
-# =============================================================================
-# """
-# Returns a list of days in a given collection.
-# """
-# def get_days_col(col,*db):
-#     if type(col) == str: col = db(col)
-#     
-#     days = []
-#     for document in col.find():
-#         days.append(int(document["day"]))
-#     return days
-# =============================================================================
+"""
+Returns a list of days in a given collection.
+"""
+def get_days_col(db):
+    col = db["AllSessions"]
+    if type(col) == str: col = db(col)
+    
+    days = []
+    for document in col.find():
+        days.append(int(document["day"]))
+    return days
 
 ###############################################################################
     
@@ -269,8 +268,8 @@ def swap(x1,x2):
 ###############################################################################
 
 def get_exercise(doc, exercise):
-    assert doc["type"] is not "run"
-    assert doc["type"] is not "off"
+    assert doc["type"] != "run"
+    assert doc["type"] != "off"
     
     assert exercise in doc["exercise list"]
     
