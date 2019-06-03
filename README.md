@@ -5,3 +5,5 @@ In case someone is interested in using the Eisenrecorder. You'd need an account 
 Furthermore one has to modify the paths used for the cache and backup-function. You can find those in cache.py and backup.py within several methods.
 
 The app is executed via eisenrecorder.py.
+
+![Eisenrecorder](start_menu.png)
