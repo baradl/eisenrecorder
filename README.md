@@ -6,4 +6,4 @@ Furthermore one has to modify the paths used for the cache and backup-function. 
 
 The app is executed via eisenrecorder.py.
 
-![Eisenrecorder](start_menu.png)
+
