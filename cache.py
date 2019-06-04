@@ -14,7 +14,7 @@ import menu
 
 ###############################################################################
 
-
+CACHE_DIR = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
 
 
 
@@ -96,8 +96,9 @@ file into a folder prepared beforehand.
 """
 def save_cache_entry(data):
     day = data["day"]
+    global CACHE_DIR
     
-    filepath = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    filepath = CACHE_DIR
     
     filepath += str(day)
     if find_session(day) is not None:
@@ -125,10 +126,11 @@ Since the online client is just used for this function it is closed afterwards.
 """       
 def upload_cache():
     import connect as con
+    global CACHE_DIR
     client = con.connect_to_client()
     db = client["TrainingLogData"]
     col = db["AllSessions"]
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    directory = CACHE_DIR
     os.chdir(directory)
     
     for file_ in glob.glob("*.txt"):
@@ -156,7 +158,8 @@ Prints out a list of dates of all cached sessions.
 """
 def see_cache():
     print(he.indent())
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    global CACHE_DIR
+    directory = CACHE_DIR
     os.chdir(directory)
     
     print("Dates with cached session:")
@@ -181,12 +184,12 @@ Deletes one or all cached sessions. If a session shall be deleted that is not
 existent the user goes back to the start menu.
 """
 def delete_cache(day):
-    
+    global CACHE_DIR
     
     if is_empty(): 
         print("Cache is currently empty. Closing")
         menu.menu_cache()
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    directory = CACHE_DIR
     os.chdir(directory)
     
     if day == "all":
@@ -210,9 +213,10 @@ Returns the list of pickled files that contain the day and None if such a day
 does not exists.
 """            
 def find_session(day):
+    global CACHE_DIR
     assert type(day) == int
     
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    directory = CACHE_DIR
     os.chdir(directory)
     files = glob.glob("*.txt")
     
@@ -234,7 +238,8 @@ def find_session(day):
 Checks if cache is currently empty. Returns boolean.
 """    
 def is_empty():
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/cached_sessions/"
+    global CACHE_DIR
+    directory = CACHE_DIR
     os.chdir(directory)
     files = glob.glob("*.txt")
     

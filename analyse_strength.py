@@ -52,7 +52,7 @@ def exercise_summary(db, exercise):
         if not bw:
             if not bw_:
                 data.append(str(calc.vol(ex)))
-                
+             
                 reps_max = calc.reps_max_weight(ex)
                 weight_max = calc.max_w(ex)
                 data.append(str(reps_max)+ "x" + str(weight_max))

@@ -14,7 +14,7 @@ from helper import check
 import os, glob
 #from request import delete_session
 
-
+BACKUP_DIR = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/backup/"
 
 """
 Creates local backup for given collection. In this case the collection of interest
@@ -22,14 +22,14 @@ is "AllSessions". Files are saved on machine as pickled files. File name is the
 consecutive number of days (beginning at 01.01.2019) corresponding to its date.
 """
 def create_backup(col):
-    if type(col) is str:assert col is "AllSessions"
-    else: assert col.name is "AllSessions"
+    if type(col) is str:assert col == "AllSessions"
+    else: assert col.name == "AllSessions"
     cursor = col.find()
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/backup/"
+    global BACKUP_DIR
     for document in cursor:
         name = str(document["day"])
         if len(name) == 1: name = "0" + name
-        filepath = directory + name + ".txt"
+        filepath = BACKUP_DIR + name + ".txt"
         pickle.dump(document, open(filepath, "wb"))
         
 
@@ -68,8 +68,8 @@ To upload files the backup is unpickled.
 """
 
 def upload_backup(db):
-    directory = "C:/Users/basti/OneDrive/Dokumente/TrainingLogDB/backup/"
-    os.chdir(directory)
+    global BACKUP_DIR
+    os.chdir(BACKUP_DIR)
     col_name = "AllSessions_backup"
     col_name_new = col_name
     k = 1
