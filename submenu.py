@@ -124,7 +124,8 @@ def read(db, decision, type_):
         
         days = [sum(monthly_days[:month-1])+1,sum(monthly_days[:month])]
         
-        printer.print_allsessions(db, days)
+        sessions = filter.filter_consecutive_days(db,days[0], days[1], type_)
+        printer.print_filter(sessions)
     
     elif decision == "year":
         year = input("Which year would you like to see: ")
