@@ -6,8 +6,9 @@ import helper as he
 import check
 import filter
 
+
 def summary_off(db):
-    
+   
     off_days = filter.filter_type(db, "off")
     
     print(he.indent())
@@ -15,7 +16,11 @@ def summary_off(db):
     today = he.today()
     print("Total days:", he.get_day_in_year(today))
     last_off = off_days[-1]
-    print("Last off day:", conv.convert_int_todate(last_off["day"]))
+    last_off_day = conv.convert_int_todate(last_off["day"])
+    print("Last off day:", last_off_day)
+    days_since_off = he.get_day_in_year(today) - last_off["day"]
+    print("Days since off:", days_since_off)
+    
     print(he.indent())
     
     content = []
