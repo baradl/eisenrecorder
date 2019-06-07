@@ -25,9 +25,6 @@ consecutive days (beginning at 01.01.2019) corresponding to the date of interest
 """
 def insert_cache():   
     while True:
-        
-    
-    
         dec = input("Current year [y/n]: ")
         if dec == "y": year = "2019"
         else:
@@ -46,7 +43,6 @@ def insert_cache():
         date = day + "." + month + "." + year
         
         cons_day = he.get_day_in_year(date)
-        
         
         workout_type = input("workout type: ")
         exercises = []

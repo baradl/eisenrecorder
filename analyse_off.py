@@ -10,6 +10,8 @@ import filter
 def summary_off(db):
    
     off_days = filter.filter_type(db, "off")
+    strength_days = filter.filter_filtered(db["AllSessions"].find(), "strength")
+    run_days = filter.filter_type(db, "run")
     
     print(he.indent())
     print("Number off days:", len(off_days))
@@ -29,15 +31,27 @@ def summary_off(db):
         monthly_days = he.monthly_days(int(year))
         days = [sum(monthly_days[:month-1])+1,sum(monthly_days[:month])]
         
-        counter_month = 0
+        counter_month_off = 0
         for session in off_days:
             if session["day"] <= days[1] and session["day"] >= days[0]:
-                counter_month += 1
+                counter_month_off += 1
         
-        content.append([conv.convert_to_month(month), str(counter_month)])
+        counter_month_strength = 0
+        for session in strength_days:
+            if session["day"] <= days[1] and session["day"] >= days[0]:
+                counter_month_strength += 1
+                
+        counter_month_run = 0
+        for session in run_days:
+            if session["day"] <= days[1] and session["day"] >= days[0]:
+                counter_month_run += 1
+            
+        
+        content.append([conv.convert_to_month(month), str(counter_month_strength), 
+                        str(counter_month_run),str(counter_month_off)])
         #print(conv.convert_to_month(month)+ ":" ,counter_month)
     
-    header = ["Month", "Off days"]
+    header = ["Month", "Strength days", "Runs", "Off days"]
     out = tabulate(content, header)
     print(out)
     
@@ -72,6 +86,8 @@ def get_missing(db):
     [multi, missing] = check.check_int_list(days)
     return missing
     
+    
+
     
     
     
