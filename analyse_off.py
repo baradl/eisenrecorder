@@ -15,6 +15,8 @@ def summary_off(db):
     
     print(he.indent())
     print("Number off days:", len(off_days))
+    print("Number Stength days:", len(strength_days))
+    print("Number Runs:", len(run_days))
     today = he.today()
     print("Total days:", he.get_day_in_year(today))
     last_off = off_days[-1]

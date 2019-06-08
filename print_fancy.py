@@ -25,7 +25,8 @@ windll.kernel32.SetConsoleWindowInfo(hdl, True, byref(rect))
 bufsize = wintypes._COORD(1000, 100) # rows, columns
 windll.kernel32.SetConsoleScreenBufferSize(bufsize)
 
-cprint(figlet_format('  EISENRECORDER  ', font='standard'), 'white', 'on_red', attrs=(['underline','bold', 'dark']))
+cprint(figlet_format('  EISENRECORDER  ', font='standard'), 'white', 'on_red', 
+       attrs=(['underline','bold', 'dark']))
 
 with open("barbell_ascii.txt") as bb:
     print(bb.read())
