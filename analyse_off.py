@@ -14,14 +14,18 @@ def summary_off(db):
     run_days = filter.filter_type(db, "run")
     
     print(he.indent())
+    
     print("Number off days:", len(off_days))
     print("Number Stength days:", len(strength_days))
     print("Number Runs:", len(run_days))
+    
     today = he.today()
     print("Total days:", he.get_day_in_year(today))
+    
     last_off = off_days[-1]
     last_off_day = conv.convert_int_todate(last_off["day"])
     print("Last off day:", last_off_day)
+    
     days_since_off = he.get_day_in_year(today) - last_off["day"]
     print("Days since off:", days_since_off)
     
