@@ -3,6 +3,7 @@ import connect
 import converter as conv
 import calculations as calc
 from tabulate import tabulate
+from termcolor import colored
 
 DB = connect.connect_to_client()
 BW_EXERCISES = ["KZ", "Toe-Up", "Role-Out"]
@@ -18,9 +19,12 @@ def exercise_summary(db, exercise):
             break
         else: 
             bw = False
-            headers = ["Date", "Workload", "Volume", "Max Weight", "Estimated 1RM"]
+            headers = ["Date", "Workload", "Volume", "Max Weight", "1RM"]
         
     content = []
+    total_reps = []
+    volume = []
+    onerm = []
     
     for ex, day in zip(ex_list, days):
         data = [conv.convert_int_todate(day)]
@@ -31,7 +35,7 @@ def exercise_summary(db, exercise):
         
         if len(ex) == 4:
             setsreps = str(ex[1]) + "x" + str(ex[2]) + "x" + str(ex[3])
-            total_reps = ex[1]*ex[2]
+            total_reps.append(ex[1]*ex[2])
             if "BW" == ex[3]: bw_ = True
             else: bw_ = False
             
@@ -40,7 +44,7 @@ def exercise_summary(db, exercise):
             for rep,weight in zip(ex[1], ex[2]):
                 setsreps += str(rep) + "x" + str(weight) + ", "
             setsreps = setsreps[:-2]
-            total_reps = sum(ex[1])
+            total_reps.append(sum(ex[1]))
             if "BW" in ex[2]: bw_ = True
             else: bw_ = False
         
@@ -51,7 +55,8 @@ def exercise_summary(db, exercise):
         
         if not bw:
             if not bw_:
-                data.append(str(calc.vol(ex)))
+                volume.append(calc.vol(ex))
+                data.append(str(volume[-1]))
              
                 reps_max = calc.reps_max_weight(ex)
                 weight_max = calc.max_w(ex)
@@ -59,14 +64,66 @@ def exercise_summary(db, exercise):
             else:
                 data.append("-")
                 data.append("-")
-            try: data.append(str(calc.estimate_onerm(reps_max, weight_max)))
-            except: data.append("-")                                                                         
+                volume.append(0)
+            try: 
+                onerm.append(calc.estimate_onerm(reps_max, weight_max))
+                data.append(str(onerm[-1]))
+            except: 
+                data.append("-")  
+                onerm.append(0)                                                                       
         else:
-            data.append(str(total_reps))
+            data.append(str(total_reps[-1]))
             
         
         
         
         content.append(data)
     
+    if bw:
+        index_reps = indexes_max(total_reps)
+        content = color_content(content = content, index_reps = index_reps)
+    else:
+        index_volume = volume.index(max(volume))
+        index_onerm = onerm.index(max(onerm))
+        content = color_content(content = content, index_volume = index_volume,
+                                index_onerm = index_onerm)
+    
+    
     print(tabulate(content, headers))
+    
+    
+    
+def color_content(content, index_reps = [], index_volume = -1, index_onerm = -1):
+    text_color = "red"
+    backround_color = "on_cyan"
+    
+    if index_reps != []:
+        for index in index_reps:
+            maxreps = content[index]
+            maxreps[2] = colored(maxreps[2], text_color, backround_color)
+        return content
+    if index_volume > -1:
+        maxvolume = content[index_volume]
+        maxvolume[2] = colored(maxvolume[2], text_color, backround_color)
+        
+        maxonerm = content[index_onerm]
+        maxonerm[4] = colored(maxonerm[4], text_color, backround_color)
+        
+        return content
+    
+    
+def indexes_max(array):
+    maxi = max(array)
+    index = []
+    i = 0
+    while i < len(array):
+        if array[i] == maxi: 
+            index.append(i)
+        i+=1
+        
+    return index
+    
+    
+    
+    
+    
