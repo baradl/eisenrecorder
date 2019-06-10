@@ -17,13 +17,14 @@ import submenu
 Start menu. User can work on sessions, backup or cache.
 """
 
-def user_start():
-    if con.check_internet() and not cache.is_empty():
+def user_start(client):
+    if not cache.is_empty() and client != None:
         print(he.indent())
         decision = input("Cache can be uploaded. Confirm [y/n]: ")
         if decision == "y":
             cache.upload_cache()
     print(he.indent())
+    
     print("1. Strenght \n2. Run \n3. Off \n4. Cache \n5. Backup")
     dec1 = input("\nChoose number or press enter for exit: ")
     options = ["strength", "run", "off"]
@@ -33,20 +34,11 @@ def user_start():
         print("Closing")
         quit()
     
-    
-    
-    
     if dec1 in [1,2,3]:
-        if con.check_internet():
-            print("Connecting to online host.")
-            print(he.indent())
-            client = con.connect_to_client()
-            db = client["TrainingLogData"]
-            #print("Choose", options[dec1-1])
-            session_menu(db, options[dec1-1])
-        else:
-            print("No network service. Going back to main menu.")
-            user_start()        
+        client = con.connect_to_client()
+        db = client["TrainingLogData"]
+        session_menu(db, options[dec1-1])
+        client.close()      
     elif dec1 == 4:
         menu_cache()
     elif dec1 == 5:
@@ -90,10 +82,12 @@ def session_menu(db, type_):
         
     elif input_ == "3":
         if options.index(type_) == 0:
-            strength_analysis_menu(db)
+            import analyse_strength
+            exercise = input("Exercise to be listed: ")
+            analyse_strength.exercise_summary(db, exercise)
         elif options.index(type_) == 1:
             import analyse_run as ar
-            print(he.indent())
+            
             ar.summary_run(db)
             print(he.indent())
             dec = input("See specific week: ")
@@ -179,28 +173,30 @@ def backup_menu():
 ###############################################################################
         
         
-def strength_analysis_menu(db):
-    import filter
-    import analyse_strength
-    types = re.TYPES
-    print("1. Print Session type \n2. Print Exercise \n")
-    decision = input("Choose number or press enter for exit: ")
-    
-    if decision == "1":
-        while(True):
-            type_ = input("Type: ")
-            if type_ in types: break
-            else: print("Selected type does not exist.")
-        
-        session_list = filter.filter_type(db, type_)
-        
-        printer.print_filter(session_list[-10])
-    
-    elif decision == "2":
-        exercise = input("Exercise to be listed: ")
-        analyse_strength.exercise_summary(db, exercise)
-    
-    else:
-        print("Closing.")
+# =============================================================================
+# def strength_analysis_menu(db):
+#     import filter
+#     import analyse_strength
+#     types = re.TYPES
+#     print("1. Print Session type \n2. Print Exercise \n")
+#     decision = input("Choose number or press enter for exit: ")
+#     
+#     if decision == "1":
+#         while(True):
+#             type_ = input("Type: ")
+#             if type_ in types: break
+#             else: print("Selected type does not exist.")
+#         
+#         session_list = filter.filter_type(db, type_)
+#         
+#         printer.print_filter(session_list[-10])
+#     
+#     elif decision == "2":
+#         exercise = input("Exercise to be listed: ")
+#         analyse_strength.exercise_summary(db, exercise)
+#     
+#     else:
+#         print("Closing.")
+# =============================================================================
     
 ###############################################################################

@@ -84,7 +84,7 @@ def get_day_in_year(date):
         consecutive_days += 365
         if leap(year_): consecutive_days += 1
         
-        year_ += 1
+        year_ += 1    
     
     for i in range(month-1):
         consecutive_days += days[i]

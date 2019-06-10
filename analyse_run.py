@@ -133,7 +133,7 @@ def color_content(content, index_dist, index_time, index_pace, index_fastest, in
     longest = content[index_longest]
     fastest = content[index_fastest]
     
-    text_color = "red"
+    text_color = "grey"
     backround_color = "on_cyan"
     
     dist[2] = colored(dist[2], text_color, backround_color)

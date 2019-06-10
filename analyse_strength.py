@@ -74,9 +74,6 @@ def exercise_summary(db, exercise):
         else:
             data.append(str(total_reps[-1]))
             
-        
-        
-        
         content.append(data)
     
     if bw:
@@ -94,7 +91,7 @@ def exercise_summary(db, exercise):
     
     
 def color_content(content, index_reps = [], index_volume = -1, index_onerm = -1):
-    text_color = "red"
+    text_color = "grey"
     backround_color = "on_cyan"
     
     if index_reps != []:
