@@ -51,15 +51,17 @@ def edit(session, col):
                 session.update({"exercise list": exlist})
         col.save(session)
     elif dec == "3":
-        while True:
-            new_ex = input("New exercise: ")
-            if len(new_ex) < 4: break
-            new_ex = conv.convert_input(new_ex)
-            print(new_ex)
-            re.updater.update_exercise(session, new_ex, col)
-        
+        if session["type"] != "run":
+            while True:
+                new_ex = input("New exercise: ")
+                if len(new_ex) < 4: break
+                new_ex = conv.convert_input(new_ex)
+                re.updater.update_exercise(session, new_ex, col)
             
-        
+        else:
+            new_ex = input("New Run: ")
+            new_ex = conv.convert_run(new_ex)
+            re.updater.update_exercise(session, new_ex, col)  
     elif dec == "4":
         ex = input("List exercises to be deleted: ")
         ex_list = ex.split()
@@ -70,12 +72,12 @@ def edit(session, col):
         re.updater.update_comments(session, newcomment, col)
         
     else:
-        dec = input("No valid input. Back to menu? ")
-        if dec == "yes": edit()
+        dec = input("No valid input. Back to menu [y/n]: ")
+        if dec == "y": edit()
         else: raise SystemExit
     
     re.printer.print_session(session)
-    dec = input("Back to database menu [y/n]: ")
+    dec = input("Back to main menu [y/n]: ")
     if dec == "y": menu.user_start(col.database)
 
 

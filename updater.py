@@ -9,21 +9,24 @@ import checker
                 
 def update_exercise(doc, newexercise, col):
     assert doc["type"] != "off"
-    exercises = doc["exercise list"]
-    if newexercise[0] in exercises: 
-        ex_num = exercises.index(newexercise[0])
-        new = "exercise" + str(ex_num + 1)
-        
-        doc[new] = newexercise
-        
+    if doc["type"] != "run":
+        exercises = doc["exercise list"]
+        if newexercise[0] in exercises: 
+            ex_num = exercises.index(newexercise[0])
+            new = "exercise" + str(ex_num + 1)
+            
+            doc[new] = newexercise
+            
+        else:
+            ex_num = len(exercises)
+            exercises.append(newexercise[0])
+            new = "exercise" + str(ex_num + 1)
+            doc.update({new: newexercise})
+            doc["amount of exercises"] += 1
+            checker.check_exlist(doc)
+    
     else:
-        ex_num = len(exercises)
-        exercises.append(newexercise[0])
-        new = "exercise" + str(ex_num + 1)
-        doc.update({new: newexercise})
-        doc["amount of exercises"] += 1
-        
-    checker.check_exlist(doc)
+        doc["run"] = newexercise
     col.save(doc)
     
 ###############################################################################      

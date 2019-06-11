@@ -6,6 +6,7 @@ import helper as he
 import printer
 import checker
 import updater
+import time
 
 
 TYPES = ["off", "run", "SQ", "DL", "BP", "UB", "LB"]
@@ -55,10 +56,16 @@ Returns session of a given day.
 """
 def find_session(col, day):
     #if type(day) == int: day = str(day)
-    cursor = col.find()
+    cursor = col.find().sort("day")
+    found = []
+    #t0 = time.time()
     for document in cursor:
-        if document["day"] == day:
-            return document
+        if document["day"] == day: found.append(document)
+        if document["day"] > day: break
+    
+    #t1 = time.time()
+    #print("Time:", t1-t0)    
+    return found
 
 ###############################################################################
 

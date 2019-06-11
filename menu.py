@@ -6,10 +6,7 @@ import helper as he
 from helper import converter as conv
 import connect as con
 import request as re
-import cache
-import printer
-import submenu
-
+import cache, printer, submenu, filter
 
 ###############################################################################
 
@@ -62,22 +59,28 @@ def session_menu(db, type_):
     
     if input_ == "1":
         decision = submenu.cud_actions()
+        
         if decision == "1":
             submenu.insert(db, type_)
+        
         elif decision == "2":
-            submenu.edit(db, db["AllSessions"])
+            date = input("Date to change (dd.mm.yy): ")
+            cons_day = he.get_day_in_year(date)
+            sessions = re.find_session(db["AllSessions"], cons_day)
+            session = filter.filter_filtered(sessions, type_)[0]
+            re.printer.print_session(session)
+            submenu.edit(session, db["AllSessions"])
+            
         elif decision == "3":
             date = input("Date to delete (dd.mm.yy): ")
             cons_day = he.get_day_in_year(date)
-            
-            col = db["AllSessions"]
-            session = re.find_session(col, cons_day)
+            sessions = re.find_session(db["AllSessions"], cons_day)
+            session = filter.filter_filtered(sessions, type_)[0]
             re.printer.print_session(session)
             dec = input("Delete this session [y/n]: ")
-            if dec == "y": re.delete_session(col, cons_day)
+            if dec == "y": re.delete_session(db["AllSessions"], cons_day)
             
     elif input_ == "2":
-        
         submenu.read(db, submenu.read_decision(), type_.lower())
         
     elif input_ == "3":

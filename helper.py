@@ -301,6 +301,7 @@ def abbreviation():
                     ["RFly", "Reverse-Fly"],
                     ["SH", "Seitheben"],
                     ['DL', "Deadlift"],
+                    ["Sumo-DL", "Sumo-Deadlift"],
                     ["RDL","Romanian Deadlift"],
                     ["LZ(b)", "Lat-Zug (breit)"],
                     ["LZ(e)", "Lat-Zug (eng)"],
