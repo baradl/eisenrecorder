@@ -115,6 +115,17 @@ def get_week(date):
     return [start, end]
 
 
+def indexes_max(array):
+    maxi = max(array)
+    index = []
+    i = 0
+    while i < len(array):
+        if array[i] == maxi: 
+            index.append(i)
+        i+=1
+        
+    return index
+
 ###############################################################################
     
 

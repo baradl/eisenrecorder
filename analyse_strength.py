@@ -4,6 +4,7 @@ import converter as conv
 import calculations as calc
 from tabulate import tabulate
 from termcolor import colored
+from helper import indexes_max
 
 DB = connect.connect_to_client()
 BW_EXERCISES = ["KZ", "Toe-Up", "Role-Out"]
@@ -80,8 +81,8 @@ def exercise_summary(db, exercise):
         index_reps = indexes_max(total_reps)
         content = color_content(content = content, index_reps = index_reps)
     else:
-        index_volume = volume.index(max(volume))
-        index_onerm = onerm.index(max(onerm))
+        index_volume = indexes_max(volume)
+        index_onerm = indexes_max(onerm)
         content = color_content(content = content, index_volume = index_volume,
                                 index_onerm = index_onerm)
     
@@ -99,26 +100,19 @@ def color_content(content, index_reps = [], index_volume = -1, index_onerm = -1)
             maxreps = content[index]
             maxreps[2] = colored(maxreps[2], text_color, backround_color)
         return content
-    if index_volume > -1:
-        maxvolume = content[index_volume]
-        maxvolume[2] = colored(maxvolume[2], text_color, backround_color)
+    if index_volume != []:
+        for index in index_volume:
+            maxvolume = content[index]
+            maxvolume[2] = colored(maxvolume[2], text_color, backround_color)
         
-        maxonerm = content[index_onerm]
-        maxonerm[4] = colored(maxonerm[4], text_color, backround_color)
-        
+        for index in index_onerm:
+            maxonerm = content[index]
+            maxonerm[4] = colored(maxonerm[4], text_color, backround_color)
+            
         return content
     
     
-def indexes_max(array):
-    maxi = max(array)
-    index = []
-    i = 0
-    while i < len(array):
-        if array[i] == maxi: 
-            index.append(i)
-        i+=1
-        
-    return index
+
     
     
     

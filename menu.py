@@ -22,7 +22,7 @@ def user_start(client):
             cache.upload_cache()
     print(he.indent())
     
-    print("1. Strenght \n2. Run \n3. Off \n4. Cache \n5. Backup")
+    print("1. Strength \n2. Run \n3. Off \n4. Cache \n5. Backup")
     dec1 = input("\nChoose number or press enter for exit: ")
     options = ["strength", "run", "off"]
     try:

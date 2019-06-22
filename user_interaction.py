@@ -127,7 +127,7 @@ def insert_run(db):
     
     if re.checker.check_doc_exist(db, col, cons_day):
         doc = re.find_session(col, cons_day)
-        printer.print_session(doc)
+        printer.print_session(doc[0])
         dec = input("Day already exists. Change day [y/n]: ")
         
         if dec == "y": 
