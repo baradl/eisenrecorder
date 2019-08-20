@@ -7,10 +7,12 @@ Collection of functions to work with the cache.
 import helper as he
 import request as re
 import checker
+import printer
 from helper import converter as conv
 from helper import check
 import pickle, glob, os
 import menu
+from progressbar import printProgressBar as pbb
 
 ###############################################################################
 
@@ -25,13 +27,15 @@ consecutive days (beginning at 01.01.2019) corresponding to the date of interest
 """
 def insert_cache():   
     while True:
-        dec = input("Current year [y/n]: ")
-        if dec == "y": year = "2019"
+        dec = input("Current month and year [y/n]: ")
+        if dec == "y": 
+            year = str(he.year_now())
+            month = str(conv.convert_month_to_int(str(he.month_now())))
         else:
             year = input("Year: ")
+            month = input("Month: ")
+            month = str(conv.convert_month_to_int(month))
             
-        month = input("Month: ")
-        month = str(conv.convert_month_to_int(month))
         
         day = input("Day: ")
         day = check.check_day(day)
@@ -47,9 +51,11 @@ def insert_cache():
         workout_type = input("workout type: ")
         exercises = []
         if workout_type != "off" and workout_type != "run":
-            print("'name sets reps weight' or 'name reps weight'")
-            see_abb = input("See abbreviation? ")
-            if see_abb == "yes": he.abbreviation()
+# =============================================================================
+#             print("'name sets reps weight' or 'name reps weight'")
+#             see_abb = input("See abbreviation? ")
+#             if see_abb == "yes": he.abbreviation()
+# =============================================================================
             while True:
                 exercise = input("Exercise: ")
                 if len(exercise) < 4: break
@@ -58,7 +64,7 @@ def insert_cache():
         elif workout_type == "run": 
             stats = input("Distance in km and time in minutes (dis time): ")
             run = conv.convert_run(stats)
-            exercises.append(run)
+            exercises = run
             
         comment_ = input("Any comments regarding the session: ")
         if len(comment_) < 3: comment_ = ""
@@ -66,10 +72,7 @@ def insert_cache():
         dic = re.construct_dict_session(cons_day,workout_type, exercises, comment_)
         print(he.indent())
         print("Insert following session:")
-        print("Date: " + date)
-        print("Type:", workout_type)
-        if workout_type != "off" and workout_type != "run":
-            print("Exercise list:", dic["exercise list"])
+        printer.print_session(dic)
         
         print(he.indent())
         decision = input("Correct [y/n]: ")
@@ -128,8 +131,11 @@ def upload_cache():
     col = db["AllSessions"]
     directory = CACHE_DIR
     os.chdir(directory)
-    
-    for file_ in glob.glob("*.txt"):
+    files = glob.glob("*.txt")
+    i = 0
+    l = len(files)
+    pbb(0, l, prefix = 'Upload:', suffix = '', length = 50)
+    for file_ in files:
         filepath = directory + file_
         doc = pickle.load(open(filepath,"rb"))
         day = doc["day"]
@@ -140,6 +146,8 @@ def upload_cache():
             if dec == "y": re.insert_session(col, doc)
             else: continue
         else: re.insert_session(col, doc)
+        pbb(i+1, l, prefix = 'Upload:', suffix = '', length = 50)
+        i += 1
     client.close()
     #delete_cache("all")
 
