@@ -9,7 +9,7 @@ import updater
 import time
 
 
-TYPES = ["off", "run", "SQ", "DL", "BP", "UB", "LB"]
+TYPES = ["off", "run", "hike", "SQ", "DL", "BP", "UB", "LB"]
 
 
 ###############################################################################
@@ -26,6 +26,8 @@ def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     doc = {"day": day, "type": workout_type}
     
     if workout_type == "run": doc.update({"run": exercises})
+    
+    elif workout_type == "hike": doc.update({"hike": exercises})
     
     elif workout_type != "off": 
         doc.update({ "amount of exercises": len(exercises)})

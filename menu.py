@@ -22,23 +22,23 @@ def user_start(client):
             cache.upload_cache()
     print(he.indent())
     
-    print("1. Strength \n2. Run \n3. Off \n4. Cache \n5. Backup")
+    print("1. Strength \n2. Run \n3. Off \n4. Hike \n5. Cache \n6. Backup")
     dec1 = input("\nChoose number or press enter for exit: ")
-    options = ["strength", "run", "off"]
+    options = ["strength", "run", "off", "hike"]
     try:
         dec1 = int(dec1)
     except: 
         print("Closing")
         quit()
     
-    if dec1 in [1,2,3]:
+    if dec1 in [1,2,3,4]:
         client = con.connect_to_client()
         db = client["TrainingLogData"]
         session_menu(db, options[dec1-1])
         client.close()      
-    elif dec1 == 4:
-        menu_cache()
     elif dec1 == 5:
+        menu_cache()
+    elif dec1 == 6:
         backup_menu()           
     else:
         print("Exit.")
@@ -54,7 +54,7 @@ def session_menu(db, type_):
     
     print(he.indent())
     
-    options = ["strength", "run", "off"]
+    options = ["strength", "run", "off", "hike"]
     assert type_.lower() in options
     
     if input_ == "1":
@@ -86,8 +86,13 @@ def session_menu(db, type_):
     elif input_ == "3":
         if options.index(type_) == 0:
             import analyse_strength
-            exercise = input("Exercise to be listed: ")
-            analyse_strength.exercise_summary(db, exercise)
+            input_ = input("Exercise to be listed: ")
+            input__ = "".join(input_.split()).lower()[:3]
+            if input__ in analyse_strength.valid_groups:
+                group = analyse_strength.get_group(input__)
+                analyse_strength.group_summary(db, group)
+            else:
+                analyse_strength.exercise_summary(db, input_)
         elif options.index(type_) == 1:
             import analyse_run as ar
             

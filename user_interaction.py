@@ -49,7 +49,7 @@ def insert_strength(db):
     
     if re.checker.check_doc_exist(db, col, cons_day):
         doc = re.find_session(col, cons_day)
-        printer.print_session(doc)
+        printer.print_session(doc[0])
         dec = input("Day already exists. Change day [y/n]: ")
     
         if dec == "y": 
@@ -216,7 +216,70 @@ def insert_off(db):
     
     decision = input("Insert another off day [y/n]: ")
     if decision == "y": insert_off(db)    
+
+
+###############################################################################
     
+def insert_hike(db):
+    col = db["AllSessions"]
+    
+    print(he.indent())
+     
+    dec = input("Current month and year [y/n]: ")
+    if dec == "y": 
+        year = str(he.year_now())
+        month = str(conv.convert_month_to_int(str(he.month_now())))
+    else:
+        year = input("Year: ")
+        month = input("Month: ")
+        month = str(conv.convert_month_to_int(month))
+        
+    
+    day = input("Day: ")
+    day = check.check_day(day)
+    
+    if len(day) == 1: day = "0" + day
+    if len(month) == 1: month = "0" + month
+    if len(year) ==2: year = "20" + year
+    
+    date = day + "." + month + "." + year
+    
+    cons_day = he.get_day_in_year(date)
+    
+    if re.checker.check_doc_exist(db, col, cons_day):
+        doc = re.find_session(col, cons_day)
+        printer.print_session(doc)
+        dec = input("Day already exists. Change day [y/n]: ")
+
+        if dec == "y": 
+            insert_hike(db)
+                       
+    workout_type = "hike"
+    
+    dis = float(input("Distance [km]: "))
+    height = float(input("Height meter: "))
+    minutes, seconds = conv.convert_time_tofloat(input("Time: "))
+    
+    time = minutes + seconds/60
+    
+    exercises = [dis, height, time]
+    
+    comment_ = input("Any comments regarding the session: ")
+    if len(comment_) < 3: comment_ = ""
+        
+    dic = re.construct_dict_session(cons_day, workout_type, exercises, comment_)
+    print(he.indent())
+    
+    printer.print_session(dic)
+    
+    print(he.indent())
+    
+    decision = input("Correct [y/n]: ")
+    if decision == "y": re.insert_session(col, dic)
+    else: insert_hike(db)
+    
+    decision = input("Insert another hike [y/n]: ")
+    if decision == "y": insert_hike(db)
 # =============================================================================
 # """
 # Inserts all entries of all collections into the collection 'AllSessions'. Nothing

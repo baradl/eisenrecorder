@@ -28,4 +28,5 @@ def find(col, day):
 db, col = create(col = "")
 x = find(col, 107)
 y = find(col, 105)
+y = y[0]
     

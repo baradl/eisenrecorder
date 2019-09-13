@@ -58,3 +58,13 @@ def check_int_list(int_list):
             for j in range(int_list[i-1] + 1, int_list[i]):
                 missing.append(j)
     return [multi, missing]
+
+###############################################################################
+    
+def stringlist_in_stringlist(a,b):
+    for el in a:
+        for el2 in b:
+            if el == el2: return True
+            
+    return False
+

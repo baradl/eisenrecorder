@@ -27,6 +27,12 @@ def print_session(doc):
             print("Distance:", run[0], "km")
             print("Durationen: " + conv.convert_float_totime(run[1]))
             print("average Pace: " + conv.convert_float_totime(run[2]))
+            
+        elif doc["type"] == "hike":
+            hike = doc["hike"]
+            print("Distance:", hike[0], "km")
+            print("Height meter:", hike[1], "m")
+            print("Duration: " + conv.convert_float_totime(hike[2]))
         
         else:
             n   = doc["amount of exercises"]

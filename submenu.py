@@ -166,7 +166,7 @@ def cud_actions():
 
 def insert(db, type_):
     if type_ == "strength":
-        print("'name sets reps weight' or 'name reps weight'")
+        #print("'name sets reps weight' or 'name reps weight'")
         see_abb = input("See abbreviation [y/n]: ")
         if see_abb == "y": he.abbreviation()
         ui.insert_strength(db)
@@ -174,6 +174,8 @@ def insert(db, type_):
         ui.insert_run(db)
     elif type_ == "off":
         ui.insert_off(db)
+    elif type_ == "hike":
+        ui.insert_hike(db)
     
 def read_decision():
     choices = ["Session", "Week", "Month", "Year", "All"]
