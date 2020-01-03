@@ -1,10 +1,11 @@
-import connect, check, filter
-import converter as conv
-import calculations as calc
+import connect
+from utils import check, filter
+import parsing.converter as conv
+import analyze.calculations as calc
 from tabulate import tabulate
 from termcolor import colored
-from helper import indexes_max
-from helper import get_exercise
+from utils.helper import indexes_max
+from utils.helper import get_exercise
 
 DB = connect.connect_to_client()
 BW_EXERCISES = ["KZ", "Toe-Up", "Role-Out"]

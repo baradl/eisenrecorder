@@ -1,9 +1,4 @@
-"""
-Collection of calculation functions like volume per session/week/month etc. in
-preparation for statistical analysis
-"""
-
-import helper as he
+import utils.helper as he
 import numpy as np
 
 
@@ -37,6 +32,7 @@ def max_weight(session, exercise):
     
     return max_w(ex)
 
+
 def max_w(exercise):
     assert len(exercise) == 4 or len(exercise) == 3
     
@@ -61,26 +57,9 @@ def reps_max_weight(exercise):
         
         return reps[pos]
     
-    
-    
+  
 def estimate_onerm(reps, weight):
     percentage = np.array([100, 96, 92, 89, 86, 84, 81, 79, 76, 74])
     percentage = 0.01*percentage
     estimate = weight/percentage[reps-1]
     return round(estimate, 2)
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

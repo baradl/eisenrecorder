@@ -1,22 +1,10 @@
-"""
-Collection of functions that interact with the database.
-"""
-
-import helper as he
-import printer
-import checker
-import updater
+from utils import helper as he
+from crud import printer
+from utils import checker
+from crud import updater
 import time
 
-
 TYPES = ["off", "run", "hike", "SQ", "DL", "BP", "UB", "LB"]
-
-
-###############################################################################
-"""
-Creates a dictionary that shall be later incorporated into the db. Consists of 
-day, workout type, exercises and comments regarding the session.
-"""
 
 def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     global TYPES
@@ -42,75 +30,26 @@ def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     doc.update({"comments": comments})
     return doc
 
-###############################################################################
 
-"""
-Inserts the above described dictionary into a given collection.
-"""
 def insert_session(col, dic):
     assert type(col) is not str
     col.insert_one(dic)
 
-###############################################################################
 
-"""
-Returns session of a given day.
-"""
 def find_session(col, day):
-    #if type(day) == int: day = str(day)
     cursor = col.find().sort("day")
     found = []
-    #t0 = time.time()
     for document in cursor:
         if document["day"] == day: found.append(document)
-        if document["day"] > day: break
-    
-    #t1 = time.time()
-    #print("Time:", t1-t0)    
+        if document["day"] > day: break    
     return found
 
-###############################################################################
 
-"""
-Returns session of a given date.
-"""
 def find_session_by_date(col, date):
     consday = he.get_day_in_year(date)
     return find_session(col, consday)
     
         
-###############################################################################
-
-"""
-Deletes session of a given day.
-"""
 def delete_session(col, day):
-    query = { "day": day }
+    query = {"day": day}
     col.delete_one(query)
-
-###############################################################################
-    
-# =============================================================================
-# """
-# Creates a copy of a given collection.
-# """
-# def create_copy(col, db):
-#     name = col.name + "_copy"
-#     new = name
-#     i = 1
-#     while checker.check_col_exist(db, db[name]):
-#         new = name + str(i)
-#         i += 1
-#     copy = db[new]
-#     cursor = col.find()
-#     for document in cursor:
-#         copy.insert_one(document)
-#     return copy
-# =============================================================================
-       
-        
-###############################################################################
-    
-    
-
-    

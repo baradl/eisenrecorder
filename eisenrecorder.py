@@ -1,21 +1,13 @@
-"""
-File to be executed to start the Eisenrecorder.
-"""
-
-import user_interaction as ui
-import helper as he
-import print_fancy, delete_pycache
+from crud import insert
+from utils import helper as he
+from artwork import print_fancy
 import connect as con
+from menu.menu import user_start
 
 print_fancy
 
-delete_pycache
-#run_test
-
-
 print("\n")
 print("Eisenrecorder started".center(79))
-#print("\n")
 
 if con.check_internet():
     client = con.connect_to_client()
@@ -24,7 +16,7 @@ else:
     print("No connection. Only Cache and Backup available.")
 
 while True:
-    ui.menu.user_start(client)
+    user_start(client)
     print(he.indent())
     dec2 = input("Back to main menu [y/n]: ")
     if dec2 != "y":
@@ -33,5 +25,4 @@ while True:
         print("\n\n")
         break
 
-
-    
+client.close()

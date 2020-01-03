@@ -3,7 +3,7 @@ Collection of filters which prepare for statistical analysis of the bulk of
 workouts
 """
 
-import helper as he
+from utils import helper as he
 import request as re
 
 

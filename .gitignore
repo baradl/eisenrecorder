@@ -4,3 +4,4 @@ delete_pycache.py
 testing.py
 visual_analysis.ipynb
 change_entry_script.py
+.vscode/

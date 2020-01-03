@@ -1,8 +1,8 @@
 import datetime
 from tabulate import tabulate
-import helper as he
-import converter as conv
-import filter
+import utils.helper as he
+import parsing.converter as conv
+import utils.filter
 from termcolor import colored
 
 
