@@ -34,15 +34,48 @@ def construct_exercises():
     return exercises
 
 def construct_run():
-    stats = input("Distance in km and time in minutes (dis time): ")
+    stats = input("Distance [km] and time [hh:mm:ss] (dis time): ")
     run = converter.convert_run(stats)
     return run
 
 def contruct_hike():
     dis = float(input("Distance [km]: "))
-    height = float(input("Height meter: "))
+    height = float(input("Height [m]: "))
     minutes, seconds = converter.convert_time_tofloat(input("Time: "))
     time = minutes + seconds/60
     hike = [dis, height, time]
-
     return hike
+
+def construct_cardio():
+    stats = input("Speed [km/h] and Time [hh:mm:ss]  (speed time): ")
+    run = converter.convert_run(stats)
+
+    rounds = int(input("Number of circuit rounds: "))
+
+    circuit = [rounds]
+    while True:
+        exercise = input("Exercise: ")
+        if len(exercise)<3:
+            break
+        exercise = exercise.split()
+        exercise[1] = parse_exercise_data(exercise[1])
+        exercise[2] = parse_exercise_data(exercise[2])
+
+        circuit.append(exercise)
+    
+    return [run[:2], circuit]
+
+def parse_exercise_data(exercise_data):
+    try:
+        exercise_data = int(exercise_data)
+    except:
+        try: 
+            exercise_data = float(exercise_data)
+        except:
+            pass
+    
+    return exercise_data
+
+        
+        
+

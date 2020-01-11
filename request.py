@@ -4,7 +4,7 @@ from utils import checker
 from crud import updater
 import time
 
-TYPES = ["off", "run", "hike", "SQ", "DL", "BP", "UB", "LB"]
+TYPES = ["off", "run", "hike", "SQ", "DL", "BP", "UB", "LB", "cardio"]
 
 def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     global TYPES

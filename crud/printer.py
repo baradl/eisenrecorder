@@ -29,8 +29,20 @@ def print_session(doc):
             print("Height meter:", hike[1], "m")
             print("Duration: " + conv.convert_float_totime(hike[2]))
         
+        elif doc["type"] == "cardio":
+            run = doc["run"]
+            distance = run[1]/60 * run[0]
+            print("Run: " + conv.convert_float_totime(run[1]) + " at", run[0], "(" + str(distance) + ")")
+            
+            circuit = doc["circuit"]
+            print("Circuit:", circuit[0], "Rounds")
+            for exercise in circuit[1:]:
+                reps = str(exercise[1])
+                weight = str(exercise[2])
+                print(exercise[0] + ": " + reps + "x" + weight)
+
         else:
-            n   = doc["amount of exercises"]
+            n = doc["amount of exercises"]
             print("Amount of exercises:", n)
             print("List of exercises:", end = " ")
             ex = doc["exercise list"]

@@ -62,6 +62,12 @@ def convert_input(exercise):
             exercise[2] = exercise[2] * n1
     return exercise
 
+def convert_ciruit_exercise(exercise):
+    exercise = exercise.split()
+
+    assert len(exercise)==3
+
+    exercise
   
 def convert_run(string):
     stats = string.split()
