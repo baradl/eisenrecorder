@@ -4,8 +4,9 @@ import connect as con
 import request as re
 from cache import cache
 from backup import backup
-from crud import printer
+from crud import insert
 from menu import submenu
+from menu import utils as menu_utils
 from utils import filter
 from analyze import analyse_strength, analyse_run, analyse_off
 
@@ -18,90 +19,55 @@ def user_start(client):
             cache.upload_cache()
     print(he.indent())
     
-    print("1. Strength \n2. Run \n3. Off \n4. Hike \n5. Cache \n6. Backup")
-    dec1 = input("\nChoose number or press enter for exit: ")
-    options = ["strength", "run", "off", "hike"]
+    print("1. Session \n2. Cache \n3. Backup")
+    decision = input("\nChoose number or press enter for exit: ")
+    #options = ["strength", "run", "off", "hike"]
     try:
-        dec1 = int(dec1)
+        decision = int(decision)
     except: 
         print("Closing")
         quit()
     
-    if dec1 in [1,2,3,4]:
+    if decision == 1:
         client = con.connect_to_client()
         db = client["TrainingLogData"]
-        session_menu(db, options[dec1-1])
+        session_menu(db)
         client.close()      
-    elif dec1 == 5:
+    elif decision == 2:
         menu_cache()
-    elif dec1 == 6:
+    elif decision == 3:
         backup_menu()           
     else:
         print("Exit.")
 
 
-def session_menu(db, type_):
-    print("1. Insert, change, delete a session \n2. Print session/week/month/year/all \n3. Analyze")    
-    input_ = input("\nChoose number or press enter for exit: ")
+def session_menu(db):
+    print("1. Create \n2. Read \n3. Update \n4. Delete")
+    
+    decision = input("\nChoose number or press enter for exit: ")
     
     print(he.indent())
     
-    options = ["strength", "run", "off", "hike"]
-    assert type_.lower() in options
+    if decision == "1":
+        insert.insert_session(db)
     
-    if input_ == "1":
-        decision = submenu.cud_actions()
+    elif decision == "2":
+        submenu.read(db, submenu.read_decision())
+
+    elif decision == "3":
+        date = input("Date to change (dd.mm.yy): ")
+        cons_day = he.get_day_in_year(date)
+        sessions = re.find_session(db["AllSessions"], cons_day)
+        session = menu_utils.get_session_from_user(sessions=sessions)
+        submenu.edit(session, db["AllSessions"])
         
-        if decision == "1":
-            submenu.insert(db, type_)
-        
-        elif decision == "2":
-            date = input("Date to change (dd.mm.yy): ")
-            cons_day = he.get_day_in_year(date)
-            sessions = re.find_session(db["AllSessions"], cons_day)
-            session = filter.filter_filtered(sessions, type_)[0]
-            re.printer.print_session(session)
-            submenu.edit(session, db["AllSessions"])
-            
-        elif decision == "3":
-            date = input("Date to delete (dd.mm.yy): ")
-            cons_day = he.get_day_in_year(date)
-            sessions = re.find_session(db["AllSessions"], cons_day)
-            session = filter.filter_filtered(sessions, type_)[0]
-            re.printer.print_session(session)
-            dec = input("Delete this session [y/n]: ")
-            if dec == "y": re.delete_session(db["AllSessions"], cons_day)
-            
-    elif input_ == "2":
-        submenu.read(db, submenu.read_decision(), type_.lower())
-        
-    elif input_ == "3":
-        if options.index(type_) == 0:
-            input_ = input("Exercise to be listed: ")
-            input__ = "".join(input_.split()).lower()[:3]
-            if input__ in analyse_strength.valid_groups:
-                group = analyse_strength.get_group(input__)
-                analyse_strength.group_summary(db, group)
-            else:
-                analyse_strength.exercise_summary(db, input_)
-        elif options.index(type_) == 1:            
-            analyse_run.summary_run(db)
-            print(he.indent())
-            dec = input("See specific week: ")
-            
-            try: 
-                dec = int(dec)
-                runs = ar.weekly_runs(db, dec + ar.START -1)
-            
-                printer.print_filter(runs)
-                dec = input("Back to run menu [y/n]: ")
-                if dec == "y": session_menu(db, type_)
-            
-            except: 
-                print("Closing")
-        elif options.index(type_) == 2:
-            analyse_off.summary_off(db)
-        
+    elif decision == "4":
+        date = input("Date to delete (dd.mm.yy): ")
+        cons_day = he.get_day_in_year(date)
+        sessions = re.find_session(db["AllSessions"], cons_day)
+        session = menu_utils.get_session_from_user(sessions=session)
+        dec = input("Delete this session [y/n]: ")
+        if dec == "y": re.delete_session(db["AllSessions"], cons_day)
     else:
         print("Closing")
               

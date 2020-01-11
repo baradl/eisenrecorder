@@ -1,4 +1,4 @@
-from crud import insert
+from crud import insert as ins
 from utils import helper as he
 from menu import menu
 import request as re
@@ -7,12 +7,6 @@ from crud import printer
 from datetime import datetime
 from utils import filter
 
-
-###############################################################################
-
-"""
-If a session shall be edited the user is guided via this menu. 
-"""
 
 def edit(session, col):
     print(he.indent())
@@ -80,15 +74,8 @@ def edit(session, col):
     dec = input("Back to main menu [y/n]: ")
     if dec == "y": menu.user_start(col.database)
 
-
-###############################################################################
     
-    
-    """
-Menu to let the user input the sessions one wants to print.
-""" 
-    
-def read(db, decision, type_):
+def read(db, decision):
     if decision == "single":
         date = input("Date of session (dd.mm.yy): ")
         cons_day = he.get_day_in_year(date)
@@ -110,7 +97,7 @@ def read(db, decision, type_):
         [start, end] = he.get_week(date)
         
         
-        doc_list = filter.filter_consecutive_days(db, start, end, type_)
+        doc_list = filter.filter_consecutive_days(db, start, end)
         
         printer.print_filter(doc_list)
     
@@ -121,12 +108,12 @@ def read(db, decision, type_):
         if len(year) == 2: year = "20" + year
         
         month = conv.convert_month_to_int(month)
-        
+
         monthly_days = he.monthly_days(int(year))
         
         days = [sum(monthly_days[:month-1])+1,sum(monthly_days[:month])]
         
-        sessions = filter.filter_consecutive_days(db,days[0], days[1], type_)
+        sessions = filter.filter_consecutive_days(db,days[0], days[1])
         printer.print_filter(sessions)
     
     elif decision == "year":
@@ -141,41 +128,14 @@ def read(db, decision, type_):
         while year > 2019:
             consecutive_days += 365
             if he.leap(year): consecutive_days += 1
-        
-            year -= 1
-        
-        printer.print_allsessions(db, [consecutive_days + 1, consecutive_days 
-                                       + days_in_year])
-        
-        
+            year -= 1  
+        printer.print_allsessions(db, [consecutive_days + 1, consecutive_days + days_in_year])
     elif decision == "all":
         printer.print_allsessions(db)
         
     else:
         print("No valid input. Closing.")
 
-
-###############################################################################
-
-        
-def cud_actions():
-    print("1. Insert \n2. Change \n3. Delete")
-    decision = input("\nChoose number or press enter for exit: ")
-    
-    return decision
-
-def insert(db, type_):
-    if type_ == "strength":
-        #print("'name sets reps weight' or 'name reps weight'")
-        see_abb = input("See abbreviation [y/n]: ")
-        if see_abb == "y": he.abbreviation()
-        ui.insert_strength(db)
-    elif type_ == "run":
-        ui.insert_run(db)
-    elif type_ == "off":
-        ui.insert_off(db)
-    elif type_ == "hike":
-        ui.insert_hike(db)
     
 def read_decision():
     choices = ["Session", "Week", "Month", "Year", "All"]
@@ -186,5 +146,3 @@ def read_decision():
         return choices[dec - 1].lower()
     except:
         return None
-        
-        

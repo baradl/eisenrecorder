@@ -1,26 +1,14 @@
-"""
-Collection of filters which prepare for statistical analysis of the bulk of 
-workouts
-"""
-
 from utils import helper as he
 import request as re
 
-
-STR_TYPES = ["SQ", "DL", "BP", "UB", "LB"]
-
-
-
-def filter_filtered(cursor, type_):
-    global STR_TYPES
-    
+def filter_filtered(cursor, type_):    
     if type_ != "strength": 
         assert type_ in re.TYPES
     
     filtered_cursor = []
     
     for doc in cursor:
-        if type_ == "strength" and doc["type"] in STR_TYPES:
+        if type_ == "strength" and doc["type"] in he.STRENGTH_TYPES:
             filtered_cursor.append(doc)
         
         elif doc["type"] == type_:
@@ -45,7 +33,7 @@ def filter_type(db, session_type):
     return filtered
 
 
-def filter_consecutive_days(db, start, end, type_):
+def filter_consecutive_days(db, start, end):
     col = db["AllSessions"]
     cursor = col.find().sort("day")
     filtered = []
@@ -60,8 +48,6 @@ def filter_consecutive_days(db, start, end, type_):
         day = doc["day"]
         if day >= start and day <= end:
             filtered.append(doc)
-    
-    if type_: return filter_filtered(filtered, type_)
     return filtered
 
 

@@ -1,11 +1,7 @@
 import request as re
-import helper
+from utils import helper
 
 
-
-"""
-Merges all uploaded backups to single one.
-"""
 def merge_backups(col1,col2):
     db = col1.database
     name1 = col1.name

@@ -17,6 +17,8 @@ def construct_dict_session(day, workout_type, exercises = [], comments= ""):
     
     elif workout_type == "hike": doc.update({"hike": exercises})
     
+    elif workout_type == "cardio": doc.update({"run": exercises[0], "circuit": exercises[1]})
+
     elif workout_type != "off": 
         doc.update({ "amount of exercises": len(exercises)})
         for i in range(len(exercises)):

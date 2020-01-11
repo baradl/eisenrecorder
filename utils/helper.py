@@ -5,6 +5,7 @@ from parsing import converter
 from utils import check
 import os, glob
 
+STRENGHT_TYPES = ["SQ", "DL", "BP", "UB", "LB"]
 
 def day_now():
     return datetime.datetime.now().day
